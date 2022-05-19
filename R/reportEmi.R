@@ -156,15 +156,23 @@ reportEmi <- function(gdx, output = NULL, regionSubsetList = NULL, t = c(seq(200
   # total captured CO2
   vm_co2capture <- readGDX(gdx, "vm_co2capture", field = "l", restore_zeros = F)[, t, ]
   # captured CO2 by DAC
-  v33_emiDAC <- readGDX(gdx, "v33_emiDAC", field = "l", restore_zeros = F, react = "silent")[, t, ]
-  if (is.null(v33_emiDAC)) {
-    v33_emiDAC <- new.magpie(getItems(vm_co2capture, "all_regi"), getItems(vm_co2capture, "ttot"), fill = 0)
+  # define variable empty
+  v33_emiDAC <- new.magpie(getItems(vm_co2capture, "all_regi"), getItems(vm_co2capture, "ttot"), fill = 0)
+  # fill variable with REMIND output if available
+  tmp <- readGDX(gdx, "v33_emiDAC", field = "l", restore_zeros = F, react = "silent")
+  if (!is.null(tmp)) {
+    v33_emiDAC[,getYears(tmp),] <- tmp
   }
-  # captured CO2 by Enhanced Weathering
-  v33_emiEW <- readGDX(gdx, "v33_emiEW", field = "l", restore_zeros = F, react = "silent")[, t, ]
-  if (is.null(v33_emiEW)) {
-    v33_emiEW <- new.magpie(getItems(vm_co2capture, "all_regi"), getItems(vm_co2capture, "ttot"), fill = 0)
+  rm(tmp)
+  # removed CO2 by Enhanced Weathering
+  # define variable empty
+  v33_emiEW <- new.magpie(getItems(vm_co2capture, "all_regi"), getItems(vm_co2capture, "ttot"), fill = 0)
+  # fill variable with REMIND output if available
+  tmp <- readGDX(gdx, "v33_emiEW", field = "l", restore_zeros = F, react = "silent")
+  if (!is.null(tmp)) {
+    v33_emiEW[,getYears(tmp),] <- tmp
   }
+  rm(tmp)
   # stored CO2
   vm_co2CCS <- readGDX(gdx, "vm_co2CCS", field = "l", restore_zeros = F)[, t, ]
 
