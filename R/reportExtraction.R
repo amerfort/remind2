@@ -43,7 +43,7 @@ grades[is.na(grades)] <- 0
   }  # substitute na by 0
   datarog           <- readGDX(gdx, name = c("p31_costExPoly", "p31_datarog"), format = "first_found")
   datarog2          <- readGDX(gdx, name = c("p31_ffPolyCoeffs"), format = "first_found")
-  pebiolc_demandmag <- readGDX(gdx, name = c("p30_pebiolc_demandmag"),  format = "first_found")
+  pebiolc_demandmag <- readGDX(gdx, name = c("pm_pebiolc_demandmag", "p30_pebiolc_demandmag"),  format = "first_found")
   p_cint            <- readGDX(gdx, name = c("pm_cint", "p_cint"), format = "first_found", react = "silent")
   fuExtrOwnCons     <- readGDX(gdx, name = c("pm_fuExtrOwnCons"), format = "first_found")
   ## variables
