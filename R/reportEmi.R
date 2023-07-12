@@ -158,9 +158,13 @@ reportEmi <- function(gdx, output = NULL, regionSubsetList = NULL, t = c(seq(200
     v33_emiDAC <- new.magpie(getItems(vm_co2capture, "all_regi"), getItems(vm_co2capture, "ttot"), fill = 0)
   }
   # captured CO2 by Enhanced Weathering
-  v33_emiEW <- readGDX(gdx, "v33_emiEW", field = "l", restore_zeros = F, react = "silent")[, t, ]
+  v33_emiEW <- readGDX(gdx, "v33_emiEW", field = "l", restore_zeros = F, react = "silent")
   if (is.null(v33_emiEW)) {
     v33_emiEW <- new.magpie(getItems(vm_co2capture, "all_regi"), getItems(vm_co2capture, "ttot"), fill = 0)
+  }else {
+    tmp <- new.magpie(getRegions(v33_emiEW),t,getNames(v33_emiEW),fill=0)
+    tmp[,getYears(v33_emiEW),] <- v33_emiEW
+    v33_emiEW <- tmp
   }
   # stored CO2
   vm_co2CCS <- readGDX(gdx, "vm_co2CCS", field = "l", restore_zeros = F)[, t, ]

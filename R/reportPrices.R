@@ -86,6 +86,12 @@ reportPrices <- function(gdx, output=NULL, regionSubsetList=NULL,
   pm_dataemi     <- readGDX(gdx,name=c("pm_emifac","pm_dataemi"),format="first_found",restore_zeros=FALSE)[,t, c("pegas.seel.ngt.co2","pecoal.seel.pc.co2")]
   pm_pvpRegi     <- readGDX(gdx,name='pm_pvpRegi',format="first_found")[, t, "perm"]
   pm_taxCO2eq    <- readGDX(gdx,name=c("pm_taxCO2eq","pm_tau_CO2_tax"),format="first_found")[, t,]
+  #CDR prices are by default identical to emission prices
+  pm_taxCDR      <- readGDX(gdx,name=c("pm_taxCO2eq","pm_tau_CO2_tax"),format="first_found")[, t,]
+  sep_prices     <- as.numeric(readGDX(gdx,name=c("cm_iterative_target_adj"),format="first_found"))
+  if(sep_prices==13){
+    pm_taxCDR    <- readGDX(gdx,name=c("pm_taxCDR"),format="first_found",react = "silent")[,t,]
+  }
   pm_taxCO2eqSCC <- readGDX(gdx,name='pm_taxCO2eqSCC',format="first_found")[, t,]
   p21_CO2TaxSectorMarkup <- readGDX(gdx,name=c('p21_CO2TaxSectorMarkup','p21_CO2_tax_sector_markup'),format="first_found",react="silent")
   if (dimExists("ttot", p21_CO2TaxSectorMarkup)) p21_CO2TaxSectorMarkup <- p21_CO2TaxSectorMarkup[, t,]
@@ -784,6 +790,7 @@ reportPrices <- function(gdx, output=NULL, regionSubsetList=NULL,
 
   #
   out <- mbind(out,setNames(abs(pm_taxCO2eq) * 1000 * 12/44, "Price|Carbon|Guardrail (US$2005/t CO2)"))
+  out <- mbind(out,setNames(abs(pm_taxCDR) * 1000 * 12/44, "Price|Carbon|CDR (US$2005/t CO2)"))
   CaptureBal_tmp <- new.magpie(getRegions(out), getYears(out), fill = NA)
   CaptureBal_tmp[,getYears(balcapture.m),] <- balcapture.m
   out <- mbind(out, setNames(CaptureBal_tmp / (budget.m+1e-10) / 3.66 * 1e3,
@@ -875,7 +882,8 @@ reportPrices <- function(gdx, output=NULL, regionSubsetList=NULL,
     "Price|Carbon|EU-wide Regulation For All Sectors (US$2005/t CO2)" = "FE (EJ/yr)",
     "Price|Carbon|Guardrail (US$2005/t CO2)"                          = "FE (EJ/yr)",
     "Price|Carbon|SCC (US$2005/t CO2)"                                = "FE (EJ/yr)",
-
+    "Price|Carbon|CDR (US$2005/t CO2)"                                = "FE (EJ/yr)",
+    
     "Price|Carbon|Demand|Buildings (US$2005/t CO2)"                   = "FE (EJ/yr)",
     "Price|Carbon|Demand|Transport (US$2005/t CO2)"                   = "FE (EJ/yr)",
     "Price|Carbon|Demand|Industry (US$2005/t CO2)"                    = "FE (EJ/yr)",
