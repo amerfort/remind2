@@ -221,6 +221,6 @@ reportSDPVariables <- function(
   output <- mbind(output,addUEperCapForBuildings(output))
   output <- mbind(output,addIntensityUE(output))
 
-
+  getSets(output)[3] <- "variable"
   return(output)
 }

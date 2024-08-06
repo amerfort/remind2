@@ -4,5 +4,4 @@
 #'
 #' @name remind2-package
 #' @aliases remind2-package remind2
-#' @docType package
-NULL
+"_PACKAGE"

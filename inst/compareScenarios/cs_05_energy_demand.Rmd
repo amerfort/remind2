@@ -1,0 +1,630 @@
+# Energy Demand
+
+## Final Energy all sectors
+
+```{r Final Energy total}
+tot <- "FE"
+items <- c(
+  "FE|Electricity",
+  "FE|Hydrogen",  
+  "FE|Heat",
+  "FE|Gases",
+  "FE|Liquids",
+  "FE|Solids",
+  NULL
+)
+```
+
+### FE all sectors by carrier - Bar 
+```{r FE all sectors by carrier - Bar }
+showAreaAndBarPlots(data, items, tot, orderVars = "user", scales = "fixed")
+```
+
+### FE all sectors - carrier share - Bar 
+```{r FE all sectors - carrier share - Bar  }
+showAreaAndBarPlots(data, items, tot, orderVars = "user", fill = TRUE)
+```
+
+### FE Line Plots
+#### Electricity
+```{r Electricity}
+showLinePlots(data, "FE|Electricity")
+```
+
+#### Liquids
+```{r Liquids}
+showLinePlots(data, "FE|Liquids")
+```
+
+#### Gases
+```{r Gases}
+showLinePlots(data, "FE|Gases")
+```
+
+#### Solids
+```{r Solids}
+showLinePlots(data, "FE|Solids")
+```
+
+#### Hydrogen
+```{r Hydrogen}
+showLinePlots(data, "FE|Hydrogen")
+```
+
+#### Heat
+```{r Heat}
+showLinePlots(data, "FE|Heat")
+```
+
+### FE Electricity Share
+```{r FE Electricity Share}
+showLinePlots(data, "FE|Electricity|Share")
+```
+
+## Buildings Final Energy
+
+```{r Buildings Final Energy}
+tot <- "FE|Buildings"
+items <- c(
+  "FE|Buildings|Electricity",
+  "FE|Buildings|Hydrogen",
+  "FE|Buildings|Heat",  
+  "FE|Buildings|Gases",
+  "FE|Buildings|Liquids",
+  "FE|Buildings|Solids",  
+  NULL
+)
+
+items2 <- c(
+  "FE|Buildings|Electricity",
+  "FE|Buildings|Hydrogen",
+  "FE|Buildings|Heat",
+  "FE|Buildings|Gases|Hydrogen",
+  "FE|Buildings|Gases|Biomass",  
+  "FE|Buildings|Gases|Fossil",
+  "FE|Buildings|Liquids|Hydrogen",    
+  "FE|Buildings|Liquids|Biomass",
+  "FE|Buildings|Liquids|Fossil",
+  "FE|Buildings|Solids|Biomass",
+  "FE|Buildings|Solids|Fossil",
+  NULL
+)
+```
+
+\newpage
+
+### FE Buildings by carrier - Bar
+```{r FE Buildings by carrier - Bar}
+showAreaAndBarPlots(data, items, tot, orderVars = "user", scales = "fixed")
+```
+
+### FE Buildings - carrier share - Bar 
+```{r FE Buildings - carrier share - Bar  }
+showAreaAndBarPlots(data, items, tot, orderVars = "user", fill = TRUE)
+```
+
+### FE Buildings by carrier (detail) - Bar 
+```{r FE Buildings by carrier (detail) - Bar  }
+showAreaAndBarPlots(data, items2, tot, orderVars = "user", scales = "fixed")
+```
+
+### FE Buildings Line Plots
+#### Electricity
+```{r Electricity}
+showLinePlots(data, "FE|Buildings|Electricity")
+```
+
+#### Liquids
+```{r Liquids}
+showLinePlots(data, "FE|Buildings|Liquids")
+```
+
+#### Gases
+```{r Gases}
+showLinePlots(data, "FE|Buildings|Gases")
+```
+
+#### Solids
+```{r Solids}
+showLinePlots(data, "FE|Buildings|Solids")
+```
+
+#### Hydrogen
+```{r Hydrogen}
+showLinePlots(data, "FE|Buildings|Hydrogen")
+```
+
+#### Heat
+```{r Heat}
+showLinePlots(data, "FE|Buildings|Heat")
+```
+
+### Electricity Share in Buildings Final Energy
+```{r Electricity Share in Buildings Final Energy}
+showLinePlots(data, "FE|Buildings|Electricity|Share")
+```
+
+
+## Industry Final Energy
+
+```{r Industry Final Energy}
+tot <- "FE|Industry"
+items <- c(
+  "FE|Industry|Electricity",
+  "FE|Industry|Hydrogen",
+  "FE|Industry|Heat",  
+  "FE|Industry|Gases",
+  "FE|Industry|Liquids",
+  "FE|Industry|Solids",  
+  NULL)
+
+items2 <- c(
+  "FE|Industry|Electricity",
+  "FE|Industry|Hydrogen",
+  "FE|Industry|Heat",
+  "FE|Industry|Gases|Hydrogen",
+  "FE|Industry|Gases|Biomass",  
+  "FE|Industry|Gases|Fossil",
+  "FE|Industry|Liquids|Hydrogen",    
+  "FE|Industry|Liquids|Biomass",
+  "FE|Industry|Liquids|Fossil",
+  "FE|Industry|Solids|Biomass",
+  "FE|Industry|Solids|Fossil",
+  NULL)
+
+```
+
+\newpage
+
+### FE Industry by carrier - Bar
+```{r FE Industry by carrier - Bar}
+showAreaAndBarPlots(data, items, tot, orderVars = "user", scales = "fixed")
+```
+
+### FE Industry - carrier share - Bar 
+```{r FE Industry - carrier share - Bar  }
+showAreaAndBarPlots(data, items, tot, orderVars = "user", fill = TRUE)
+```
+
+### FE Industry by carrier (detail) - Bar 
+```{r FE Industry by carrier (detail) - Bar  }
+showAreaAndBarPlots(data, items2, tot, orderVars = "user", scales = "fixed")
+```
+
+#### FE Industry Line Plots
+#### Electricity
+```{r Electricity}
+showLinePlots(data, "FE|Industry|Electricity")
+```
+
+#### Liquids
+```{r Liquids}
+showLinePlots(data, "FE|Industry|Liquids")
+```
+
+#### Gases
+```{r Gases}
+showLinePlots(data, "FE|Industry|Gases")
+```
+
+#### Solids
+```{r Solids}
+showLinePlots(data, "FE|Industry|Solids")
+```
+
+#### Hydrogen
+```{r Hydrogen}
+showLinePlots(data, "FE|Industry|Hydrogen")
+```
+
+#### Heat
+```{r Heat}
+showLinePlots(data, "FE|Industry|Heat")
+```
+
+### Electricity Share in Industry FE
+```{r Electricity Share in Industry FE}
+showLinePlots(data, "FE|Industry|Electricity|Share")
+```
+
+### FE Industry Subsectors
+#### Steel
+```{r Steel}
+showLinePlots(data, "FE|Industry|Steel")
+```
+
+#### Cement
+```{r Cement}
+showLinePlots(data, "FE|Industry|Cement")
+```
+
+#### Chemicals
+```{r Chemicals}
+showLinePlots(data, "FE|Industry|Chemicals")
+```
+
+#### Other Industry
+```{r Other Industry}
+showLinePlots(data, "FE|Industry|Other Industry")
+```
+
+#### FE mix Steel
+```{r FE mix Steel}
+tot <- "FE|Industry|Steel"
+items <- c(
+  "FE|Industry|Steel|Secondary|Electricity",
+  "FE|Industry|Steel|Primary|Electricity",  
+  "FE|Industry|Steel|Hydrogen",  
+  "FE|Industry|Steel|Gases",  
+  "FE|Industry|Steel|Liquids",  
+  "FE|Industry|Steel|Solids",  
+  NULL)
+showAreaAndBarPlots(data, items, tot, orderVars = "user", scales = "fixed")
+```
+
+#### FE mix Steel using process-based steel modeling by route
+```{r FE mix Steel route}
+if ("FE|Industry|Steel|BF-BOF" %in% levels(data$variable)){ # if process-based steel is used
+  tot <- "FE|Industry|Steel"
+  items <- c(
+    "FE|Industry|Steel|DRI-NG-EAF-CCS",
+    "FE|Industry|Steel|DRI-NG-EAF",
+    "FE|Industry|Steel|DRI-H2-EAF",
+    "FE|Industry|Steel|BF-BOF-CCS",
+    "FE|Industry|Steel|BF-BOF",
+    "FE|Industry|Steel|SCRAP-EAF")
+  # Non-process based scenarios have tot variable, but not items, which leads to errors in display;
+  # Therefore, filter data by scenarios that have the 'items' variables.
+  dscens <- data %>%
+    filter(.data$variable %in% items, .data$scenario != "historical") %>%
+    droplevels() %>%
+    pull('scenario') %>%
+    unique()
+  droute <- data %>%
+    filter(.data$scenario %in% dscens)
+showAreaAndBarPlots(droute, items, tot, orderVars="user", scales = "fixed")
+}
+```
+
+#### FE mix Cement
+```{r FE mix Cement}
+tot <- "FE|Industry|Cement"
+items <- c(
+  "FE|Industry|Cement|Electricity",
+  "FE|Industry|Cement|Hydrogen",  
+  "FE|Industry|Cement|Gases",
+  "FE|Industry|Cement|Liquids",
+  "FE|Industry|Cement|Solids",
+  NULL
+)
+showAreaAndBarPlots(data, items, tot, orderVars = "user", scales = "fixed")
+```
+
+#### FE mix Non-metallic minerals
+```{r FE mix Non-metallic minerals}
+tot <- "FE|Industry|Non-metallic minerals"
+items <- c(
+  "FE|Industry|Electricity|Non-metallic minerals",
+  "FE|Industry|Hydrogen|Non-metallic minerals",  
+  "FE|Industry|Heat|Non-metallic minerals",  
+  "FE|Industry|Gases|Non-metallic minerals",
+  "FE|Industry|Liquids|Non-metallic minerals",
+  "FE|Industry|Solids|Non-metallic minerals")
+showAreaAndBarPlots(data, items, tot, orderVars = "user", scales = "fixed")
+```
+
+#### FE mix Chemicals
+```{r FE mix Chemicals}
+tot <- "FE|Industry|Chemicals"
+items <- c(
+  "FE|Industry|Chemicals|Electricity|Mechanical work and low-temperature heat",
+  "FE|Industry|Chemicals|Electricity|High-temperature heat",
+  "FE|Industry|Chemicals|Hydrogen",  
+  "FE|Industry|Chemicals|Gases",
+  "FE|Industry|Chemicals|Solids",
+  "FE|Industry|Chemicals|Liquids",
+  NULL)
+showAreaAndBarPlots(data, items, tot, scales = "fixed")
+```
+
+#### FE Total Chemicals
+```{r FE Total Chemicals}
+items <- c(
+  "FE|Industry|Chemicals") 
+showLinePlots(data, items)
+```
+
+#### FE mix Other Industry
+```{r FE mix Other Industry}
+tot <- "FE|Industry|Other Industry"
+items <- c(
+  "FE|Industry|Other Industry|Electricity|Mechanical work and low-temperature heat",
+  "FE|Industry|Other Industry|Electricity|High-temperature heat",
+  "FE|Industry|Other Industry|Hydrogen",
+  "FE|Industry|Other Industry|Heat",  
+  "FE|Industry|Other Industry|Gases",
+  "FE|Industry|Other Industry|Liquids",  
+  "FE|Industry|Other Industry|Solids",
+  NULL)
+showAreaAndBarPlots(data, items, tot, orderVars = "user", scales = "fixed")
+```
+
+#### FE Industry line plots
+```{r FE Industry line plots}
+showLinePlots(data, "FE|Industry|Steel")
+showLinePlots(data, "FE|Industry|Steel|Primary")
+showLinePlots(data, "FE|Industry|Steel|Secondary")
+showLinePlots(data, "FE|Industry|Cement")
+showLinePlots(data, "FE|Industry|Non-metallic minerals")
+showLinePlots(data, "FE|Industry|Chemicals")
+showLinePlots(data, c("FE|Industry|Other Industry", "FE|Industry|other"))
+```
+
+
+#### FE Non-energy Use Industry per carrier and SE origin
+
+```{r FE Non-energy Use Industry per carrier and SE origin}
+tot <- "FE|Non-energy Use|Industry"
+items <- c(
+  "FE|Non-energy Use|Industry|Solids|Fossil",
+  "FE|Non-energy Use|Industry|Solids|Biomass",
+  "FE|Non-energy Use|Industry|Liquids|Fossil",
+  "FE|Non-energy Use|Industry|Liquids|Biomass",
+  "FE|Non-energy Use|Industry|Liquids|Hydrogen",
+  "FE|Non-energy Use|Industry|Gases|Fossil",
+  "FE|Non-energy Use|Industry|Gases|Biomass",
+  "FE|Non-energy Use|Industry|Gases|Hydrogen")
+showAreaAndBarPlots(data, items, tot)
+```
+
+
+
+#### Specific Energy Consumption
+```{r Specific Energy Consumption}
+# estimated values for thermodynamic limits are hard coded here. Could be
+# improved
+
+# Cement and other non-metallic minerals ----
+var1 <- "FE|Industry|Specific Energy Consumption|Cement"
+data %>%
+  filter(variable == var1) %>%
+  bind_rows(
+    expand.grid(
+      model = "Thermodynamic limit for cement",
+      scenario = "historical",
+      region = levels(.$region),
+      period = range(.$period),
+      variable = var1,
+      value = 1.8)) %>% # GJ/t. # nolint
+  showLinePlots(var1)
+
+# Chemicals ----
+showLinePlots(data, 'FE|Industry|Specific Energy Consumption|Chemicals')
+
+# Primary steel ----
+var2 <- "FE|Industry|Specific Energy Consumption|Primary Steel"
+data %>%
+  filter(variable == var2) %>%
+  bind_rows(
+    expand.grid(
+      model = "Thermodynamic limit for primary steel",
+      scenario = "historical",
+      region = levels(.$region),
+      period = range(.$period),
+      variable = var2,
+      value = 8.2)) %>% # GJ/t. # nolint
+  showLinePlots(var2)
+
+# Secondary steel ----
+var3 <- "FE|Industry|Specific Energy Consumption|Secondary Steel"
+data %>%
+  filter(variable == var3) %>%
+  bind_rows(
+    expand.grid(
+      model = "Thermodynamic limit for secondary steel",
+      scenario = "historical",
+      region = levels(.$region),
+      period = range(.$period),
+      variable = var3,
+      value = 1.3)) %>% # GJ/t. # nolint
+  showLinePlots(var3)
+
+# Other Industry ----
+showLinePlots(data, 'FE|Industry|Specific Energy Consumption|Other Industry')
+```
+
+
+## Transport FE split bunkers vs rest - Bar
+```{r Transport FE split bunkers vs rest - Bar}
+tot <- "FE|Transport"
+items <- c(
+  "FE|Transport|Bunkers",
+  "FE|Transport|w/o Bunkers")
+showAreaAndBarPlots(data, items, tot, orderVars = "user", scales = "fixed")
+```
+
+## Transport Final Energy --- with Bunkers
+
+```{r Transport Final Energy}
+tot <- "FE|Transport"
+items <- c(
+  "FE|Transport|Electricity",
+  "FE|Transport|Hydrogen",
+  "FE|Transport|Gases",
+  "FE|Transport|Liquids",
+  NULL
+)
+
+items2 <- c(
+  "FE|Transport|Electricity",
+  "FE|Transport|Hydrogen",  
+  "FE|Transport|Gases",
+  "FE|Transport|Liquids|Biomass",
+  "FE|Transport|Liquids|Fossil",
+  "FE|Transport|Liquids|Hydrogen",
+  NULL
+)
+```
+
+\newpage
+
+### FE Transport w Bunkers by carrier - Bar
+```{r FE Transport w Bunkers by carrier - Bar}
+showAreaAndBarPlots(data, items, tot, orderVars = "user", scales = "fixed")
+```
+
+### FE Transport w/ Bunkers - carrier share - Bar 
+```{r FE Transport w/ Bunkers - carrier share - Bar  }
+showAreaAndBarPlots(data, items, tot, orderVars = "user", fill = TRUE)
+```
+
+### FE Transport w/ Bunkers by carrier (detail) - Bar 
+```{r FE Transport w/ Bunkers by carrier (detail) - Bar  }
+showAreaAndBarPlots(data, items2, tot, orderVars = "user", scales = "fixed")
+```
+
+#### FE Transport w/ Bunkers Synfuel by mode - Bar
+```{r FE Transport w/ Bunkers Synfuel by mode - Bar}
+tot_synliq <- "FE|Transport|Liquids|Hydrogen"
+items_synliq <- c(
+  "FE|Transport|Pass|Road|LDV|Liquids|Hydrogen",
+  "FE|Transport|Freight|Road|Liquids|Hydrogen",
+  "FE|Transport|Pass|Road|Bus|Liquids|Hydrogen",
+  "FE|Transport|Freight|Rail|Liquids|Hydrogen",
+  "FE|Transport|Pass|Rail|Liquids|Hydrogen",
+  "FE|Transport|Pass|Domestic Aviation|Liquids|Hydrogen",
+  "FE|Transport|Bunkers|Pass|International Aviation|Liquids|Hydrogen",
+  "FE|Transport|Bunkers|Freight|International Shipping|Liquids|Hydrogen",
+  NULL
+)
+
+showAreaAndBarPlots(data, items_synliq, tot_synliq, orderVars = "user", scales = "fixed")
+
+```
+
+#### FE Transport w/ Bunkers Biofuel by mode - Bar
+```{r FE Transport w/ Bunkers Biofuel by mode - Bar}
+tot_bioliq <- "FE|Transport|Liquids|Biomass"
+items_bioliq <- c(
+  "FE|Transport|Pass|Road|LDV|Liquids|Biomass",
+  "FE|Transport|Freight|Road|Liquids|Biomass",
+  "FE|Transport|Pass|Road|Bus|Liquids|Biomass",
+  "FE|Transport|Freight|Rail|Liquids|Biomass",
+  "FE|Transport|Pass|Rail|Liquids|Biomass",
+  "FE|Transport|Pass|Domestic Aviation|Liquids|Biomass",
+  "FE|Transport|Bunkers|Pass|International Aviation|Liquids|Biomass",
+  "FE|Transport|Bunkers|Freight|International Shipping|Liquids|Biomass",
+  NULL
+)
+
+showAreaAndBarPlots(data, items_bioliq, tot_bioliq, orderVars = "user", scales = "fixed")
+
+```
+
+### FE Transport w/ Bunkers - Line Plots
+
+#### Electricity
+```{r Electricity}
+showLinePlots(data, "FE|Transport|Electricity")
+```
+
+#### Liquids
+```{r Liquids}
+showLinePlots(data, "FE|Transport|Liquids")
+```
+
+#### Gases
+```{r Gases}
+showLinePlots(data, "FE|Transport|Gases")
+```
+
+#### Hydrogen
+```{r Hydrogen}
+showLinePlots(data, "FE|Transport|Hydrogen")
+```
+
+### Electricity Share in Transport w/ Bunkers FE
+```{r Electricity Share in Transport w/ Bunkers FE}
+showLinePlots(data, "FE|Transport|Electricity|Share")
+```
+
+## Transport Final Energy -- w/o Bunkers
+
+```{r Basics -- w/o Bunkers}
+tot <- "FE|Transport|w/o Bunkers"
+items <- c(
+  "FE|Transport|w/o Bunkers|Electricity",
+  "FE|Transport|w/o Bunkers|Hydrogen",  
+  "FE|Transport|w/o Bunkers|Gases",
+  "FE|Transport|w/o Bunkers|Liquids",
+  NULL
+)
+items2 <- c(
+  "FE|Transport|w/o Bunkers|Electricity",
+  "FE|Transport|w/o Bunkers|Hydrogen",
+  "FE|Transport|w/o Bunkers|Gases",
+  "FE|Transport|w/o Bunkers|Liquids|Biomass",
+  "FE|Transport|w/o Bunkers|Liquids|Fossil",
+  "FE|Transport|w/o Bunkers|Liquids|Hydrogen",
+  NULL
+)
+```
+
+\newpage
+### FE Transport w/o Bunkers by carrier - Bar
+```{r FE Transport w/o Bunkers by carrier - Bar}
+showAreaAndBarPlots(data, items, tot, orderVars = "user", scales = "fixed")
+```
+
+### FE Transport w/o Bunkers - carrier share - Bar 
+```{r FE Transport w/o Bunkers - carrier share - Bar  }
+showAreaAndBarPlots(data, items, tot, orderVars = "user", fill = TRUE)
+```
+
+### FE Transport w/o Bunkers by carrier (detail) - Bar 
+```{r FE Transport w/o Bunkers by carrier (detail) - Bar  }
+showAreaAndBarPlots(data, items2, tot, orderVars = "user", scales = "fixed")
+```
+
+### FE Transport w/o Bunkers - Line Plots
+
+#### Electricity
+```{r Electricity}
+showLinePlots(data, "FE|w/o Bunkers|Transport|Electricity")
+```
+
+#### Liquids
+```{r Liquids}
+showLinePlots(data, "FE|w/o Bunkers|Transport|Liquids")
+```
+
+#### Gases
+```{r Gases}
+showLinePlots(data, "FE|w/o Bunkers|Transport|Gases")
+```
+
+#### Hydrogen
+```{r Hydrogen}
+showLinePlots(data, "FE|w/o Bunkers|Transport|Hydrogen")
+```
+
+### Electricity Share in Transport w/o Bunkers FE
+```{r Electricity Share in Transport w/o Bunkers FE}
+showLinePlots(data, "FE|Transport|w/o Bunkers|Electricity|Share")
+```
+
+
+### Transport per type
+
+```{r Transport per type}
+tot <- "FE|Transport"
+items <- c(
+  "FE|Transport|LDV|Electricity",
+  "FE|Transport|LDV|Hydrogen",
+  "FE|Transport|LDV|Gases",
+  "FE|Transport|LDV|Liquids",
+  NULL
+)
+showAreaAndBarPlots(data, items, tot, orderVars = "user", scales = "fixed")
+```
+

@@ -19,7 +19,7 @@
 #' 
 #' @export
 #' @importFrom gdx readGDX
-#' @importFrom magclass getYears mbind dimSums setNames
+#' @importFrom magclass getYears mbind setNames
 reportPolicyCosts <- function(gdx,gdx_ref,regionSubsetList=NULL,t=c(seq(2005,2060,5),seq(2070,2110,10),2130,2150)){
   ####### read in needed data #########
   ## sets
@@ -94,6 +94,7 @@ reportPolicyCosts <- function(gdx,gdx_ref,regionSubsetList=NULL,t=c(seq(2005,206
   # add other region aggregations
   if (!is.null(regionSubsetList))
     tmp <- mbind(tmp, calc_regionSubset_sums(tmp, regionSubsetList))
-  
+
+  getSets(tmp)[3] <- "variable"
   return(tmp)
 }

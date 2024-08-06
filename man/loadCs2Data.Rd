@@ -2,7 +2,7 @@
 % Please edit documentation in R/loadModeltest.R
 \name{loadCs2Data}
 \alias{loadCs2Data}
-\title{Load compareScenarios2 Data}
+\title{Load compareScenarios Data}
 \usage{
 loadCs2Data(
   mifScen,
@@ -19,12 +19,12 @@ output file.}
 
 \item{mifHist}{\code{character(1)}. Path to historical mif.}
 
-\item{cfgScen, cfgDefault}{See section "YAML Parameters" in \link[=compareScenarios2]{compareScenarios2()}.}
+\item{cfgScen, cfgDefault}{See section "YAML Parameters" in \link[=compareScenarios]{compareScenarios()}.}
 
 \item{envir}{\code{environment}. The environment where the loaded data is put into.}
 }
 \description{
-Load data from mif files into R-objects as used in \link[=compareScenarios2]{compareScenarios2()}.
+Load data from mif files into R-objects as used in \link[=compareScenarios]{compareScenarios()}.
 }
 \examples{
 \dontrun{

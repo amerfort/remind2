@@ -19,7 +19,7 @@
 #' 
 #' @export
 #' @importFrom gdx readGDX
-#' @importFrom magclass dimSums setNames getNames<-
+#' @importFrom magclass setNames getNames<-
 readEmissions <- function(gdx,emiengregi,eminegregi){
   if(!is.null(emiengregi)){
     tmp1 <- readGDX(gdx, name = c("vm_emiTe","vm_emiengregi"), field="l", format="first_found")[ , , emiengregi]

@@ -15,6 +15,7 @@
 #' @importFrom rlang .data
 #' @importFrom dplyr %>% left_join filter select rename mutate arrange ungroup across mutate_all coalesce group_by if_else
 #' @importFrom tidyr complete
+#' @importFrom utils write.table
 #' @export
 reportDIETER <- function(dieterDatafile = "report_DIETER.gdx", outputDir = ".") {
   datapath <- function(fname) {
@@ -27,7 +28,7 @@ reportDIETER <- function(dieterDatafile = "report_DIETER.gdx", outputDir = ".") 
   gdxToQuitteHourly <- function(gdxfile) {
     file <- datapath(fname = gdxfile)
     outHourly <- NULL
-    repHrs <- read.gdx(gdxName = file, requestList.name =  "report_hours", factors = FALSE, squeeze = FALSE)
+    repHrs <- read.gdx(gdxName = file, requestList.name =  "report_hours", squeeze = FALSE)
 
     names(repHrs) <- c("gdxfile", "model", "year", "country", "variable", "hour", "value")
 
@@ -48,7 +49,7 @@ reportDIETER <- function(dieterDatafile = "report_DIETER.gdx", outputDir = ".") 
                     .data$Year, .data$Period, .data$Tech, .data$Value, .data$Hour)
 
     ###################################################################
-    repTechHrs <- read.gdx(gdxName = file, requestList.name = "report_tech_hours", factors = FALSE, squeeze = FALSE)
+    repTechHrs <- read.gdx(gdxName = file, requestList.name = "report_tech_hours", squeeze = FALSE)
 
     names(repTechHrs) <- c("gdxfile", "model", "year", "country", "variable", "tech", "hour", "value")
 
@@ -95,7 +96,7 @@ reportDIETER <- function(dieterDatafile = "report_DIETER.gdx", outputDir = ".") 
     file1 <- datapath(fname = gdxfile)
     outAnnual <- NULL
     ###############################################################################################
-    reportAnnual <- read.gdx(gdxName = file1, requestList.name = "report", factors = FALSE, squeeze = FALSE)
+    reportAnnual <- read.gdx(gdxName = file1, requestList.name = "report", squeeze = FALSE)
 
     names(reportAnnual) <- c("gdxfile", "model", "year", "country", "variable", "value")
     out <- reportAnnual %>%
@@ -109,7 +110,7 @@ reportDIETER <- function(dieterDatafile = "report_DIETER.gdx", outputDir = ".") 
                     .data$Year, .data$Period, .data$Tech, .data$Value)
 
     #################################################################
-    repTech <- read.gdx(gdxName = file1, requestList.name = "report_tech", factors = FALSE, squeeze = FALSE)
+    repTech <- read.gdx(gdxName = file1, requestList.name = "report_tech", squeeze = FALSE)
 
     names(repTech) <- c("gdxfile", "model", "year", "country", "variable", "tech", "value")
 

@@ -1,0 +1,199 @@
+---
+title: "compareScenarios in remind2"
+author: 
+ - "Christof Schötz"
+ - "Falk Benke"
+date: "2024-04-26"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    number_sections: true
+vignette: >
+  %\VignetteIndexEntry{compareScenarios in remind2}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+# Overview
+
+This tutorial explains how to visually compare the results of multiple runs of the IAM [REMIND](https://github.com/remindmodel/remind) using the framework [piamPlotComparison](https://github.com/pik-piam/piamPlotComparison).
+
+The common use case is creating plots after your REMIND runs have finished, using the  [`remind/output.R`](https://github.com/remindmodel/remind/blob/develop/output.R) script: Execute `Rscript output.R` in the REMIND folder, select `Comparison across runs` and then `compareScenarios2`.
+
+The function reads the results from the output-mif-files (in the remind folder after runs are completed, i.e., the files `./output/<run_folder>/REMIND_generic_<run>.mif`). Additionally it reads historical data from a `historical.mif` in one of the run output folders. Using this data, a document containing many plots is created and written as a PDF- or HTML-file. 
+
+The underlying framework used can be found in the R library [piamPlotComparison](https://github.com/pik-piam/piamPlotComparison). 
+
+The sections of the resulting pdf file are rendered Rmarkdown-files (Rmd-files). Rmd-files may contain R-code (e.g., for creating plots, creating tables) as well as descriptive text (in this case, mostly section titles). The Rmd-files to be rendered are part of the `remind2`-package. In the development state of the package, the main Rmd-files can be found in the folder [`remind2/inst/compareScenarios/`](https://github.com/pik-piam/remind2/tree/master/inst/compareScenarios). Some optional section may be placed in the REMIND repository at [`remind/scripts/cs2/`](https://github.com/remindmodel/remind/tree/develop/scripts/cs2).
+
+# Usage 
+
+## Via output script in REMIND
+
+Typically, we want to compare the results of some REMIND runs which were created in the `remind/output/` folder of a clone of the REMIND repository. Assume such runs are available and, in particular, the `remind/output/<run_folder>/REMIND_generic_<run>.mif` of the runs of interest exist. Go to the REMIND directory `remind/` and call `Rscript output.R`. Then choose `Comparison across runs` and `compareScenarios2`. Select the runs of interest. We then can choose a filename prefix for the output file if we want. Next, choose a slurm mode, e.g., `short` (the job will run for less than 1 hour, usually something like 20min). Finally we can choose a cs2-profile. Standard profiles for the selected runs are colored. After choosing one or more profiles, the respective slurm jobs will be started. An HTML- or PDF-file will be created. If something goes wrong, take a look at the `*.log`-file with the same name as the cs2-output file.
+
+## Via direct function call
+
+A simple direct call of `piamPlotComparison::compareScenarios()` may look like this:
+
+```{r}
+library(piamPlotComparison)
+compareScenarios(
+  projectLibrary = "remind2",
+  mifScen = c("path/to/Base.mif", "path/to/NDC.mif"),
+  mifHist = "path/to/historical.mif",
+  outputFile = "CompareScenariosExample")
+```
+
+For further examples and a description of further optional arguments to the function, see `?piamPlotComparison::compareScenarios`.
+
+It is possible to use paths to the cluster if called at PIK in the local network (e.g., `/p/tmp/username/...`) or in VPN (e.g., `//clusterfs.pik-potsdam.de/tmp/username/...`).
+
+## Interactive use of the Rmd-files
+
+In this section, we want to execute individual R-code chunks in the cs-Rmd-files interactively in RStudio.
+
+First we need access to the Rmd-files. Here we essentially have two options.
+
+### Using outputFormat = "Rmd"
+
+We call `piamPlotComparison::compareScenarios()` with `outputFormat = "Rmd"` to obtain a (modified) copy of the Rmd-files.
+
+```{r}
+library(piamPlotComparison)
+compareScenarios(
+  projectLibrary = "remind2",
+  mifScen = c("path/to/scen1.mif", "path/to/scen2.mif", "path/to/scen3.mif"), # TODO.
+  mifHist = "path/to/historical.mif", # TODO.
+  outputDir = "path/to/where/rmds/should/be/copied/to", # TODO.
+  outputFormat = "Rmd",
+  # Add current time as output name to not overwrite other things:
+  outputFile = format(Sys.time(), "CompScen2-%Y%m%d-%H%M%S"))
+```
+
+The code in these Rmd-files is structured in chunks and each chunk can be run separately by clicking on its play-button. We first open `cs_main.Rmd`. At the end of the file, there is a chunk
+````
+```{r prepare mark}
+# CLICK "RUN ALL CHUNKS ABOVE" HERE TO PREPARE THE ENVIRONMENT
+```
+```` 
+Clicking on the *triangle above bar*-button on the right executes all chunks above and by that loads and prepares the data for plotting. After that we can open any section-Rmd-file and execute a chunk to create the respective plots. The plots should appear in RStudio inside the Rmd-file below the chunk.
+
+### Using a cloned remind2 repository
+
+Clone the [remind2 repository](https://github.com/pik-piam/remind2). Open a section-Rmd-file `cs_NN_XXXX.Rmd` in RStudio. 
+
+Now we want to load the `data` object so that the code-chunks can be executed. If we have VPN or are in the local network at PIK, we can load the data from the latest automated model tests (AMT) via `remind2::loadModeltest()`. If this is not possible or we want other mifs to be loaded, we can use `remind2::loadCs2Data()` to create the `data` object. See the help pages (`?<funName>`) of these functions for more information. Now the chunks in the Rmd-files should be executable.
+
+# Profiles
+
+When running `compareScenarios` via output script in REMIND, you are asked to pick one or more cs2-profiles to run.
+
+## Existing profiles
+
+A cs2-profile is a set of arguments for `piamPlotComparison::compareScenarios()`. There are different profiles for a comparison on the 12 main REMIND regions (`H12`, `H12-short`), or on the European regions (`EU27`, `EU27-short`) for 21-region-runs. The suffix `-short` indicates that only periods up to 2050 are considered. The `default`-profiles just call `compareScenarios()` with the default arguments as described in `?piamPlotComparison::compareScenarios`.
+
+The available profiles are stored in [`remind/scripts/cs2/profiles.json`](https://github.com/remindmodel/remind/blob/develop/scripts/cs2/profiles.json). Take a look at this file (open in text editor) to see the definition of each profile.
+
+## Changing or Adding Profiles
+
+To change a profile or add a new profile, just edit [`remind/scripts/cs2/profiles.json`](https://github.com/remindmodel/remind/blob/develop/scripts/cs2/profiles.json). Read the `_DESCRIPTION_` in that file. Every argument (including YAML-arguments) to `compareScenarios()` can be set or changed. 
+
+We can create our own cs2-report:
+First we create an "section"-Rmd-file, similar to `cs_NN_XXXX.Rmd` in [`remind2/inst/compareScenarios`](https://github.com/pik-piam/remind2/tree/master/inst/compareScenarios). It typically contains calls to plot-function using an R-object called `data`. This object stores all the information read from the mif-files. We place our "section"-Rmd-file in [`remind/scripts/cs2/`](https://github.com/remindmodel/remind/tree/develop/scripts/cs2). Then we add a new profile in [`remind/scripts/cs2/profiles.json`](https://github.com/remindmodel/remind/blob/develop/scripts/cs2/profiles.json) with options `"sections": "0"` and `"userSectionPath": "normalizePath('./scripts/cs2/ourSection.Rmd')"`. The new profile should appear as a choice in the `output.R`-dialog. Choosing it will create a cs2-report consisting only of the Info-section and our own section. See the profile `mySection` and [`remind/scripts/cs2/mySection.Rmd`](https://github.com/remindmodel/remind/blob/develop/scripts/cs2/mySection.Rmd) for an example.
+
+
+# Viewing variables available in mif Files
+
+The variables in the reported mif-files (`remind/output/<run_folder>/REMIND_generic_<run>.mif`) have a hierarchical structure induced by the character `|`. This structure can be viewed in a hierarchical list.
+
+## Via output script in REMIND
+
+In a remind folder with finished runs (with mif-files):
+
+1. execute `Rscript output.R`
+2. choose `Comparison across runs`
+3. choose `varListHtml`
+4. choose the runs you want to read the mif files from
+5. choose a file name prefix if you like
+
+Then the creation of the a HTML-file containing the hierarchical list of variables names in the chosen mif files is started. Note that it does not use slurm at the moment.
+
+## Via package function in remind2
+
+See `?remind2::variablesAsList`.
+
+If connected to the PIK network (possibly via VPN) execute the following code to get an overview of the variables available in the automated model test mifs.
+
+```{r}
+library(remind2)
+loadModeltest()
+varList <- variablesAsList(data, entry = "INFO")
+View(varList) # in RStudio
+```
+
+See also `?createVarListHtml` to create an HTML-file containing this info.
+
+# How to add a new plot to remind2
+
+1. If not done already, fork <https://github.com/pik-piam/remind2>.
+2. In your personal github remind2 repository, create a new branch.
+3. Clone the repository and switch to the newly created branch to get your local copy.
+4. In your local copy, open `remind2.Rproj` in RStudio.
+5. Press `CTRL+SHIFT+L` to call `devtools::load_all(".")`, which loads `remind2` from your local copy.
+6. If it is sufficient to test your new plots on the latest AMTs and you are connected to the PIK network (possibly via VPN), call `loadModeltest(folder = "some/folder")`. Otherwise call an adapted form of 
+
+```{r}
+loadCs2Data(
+  c("path/to/scen1.mif", "path/to/scen2.mif"), # TODO.
+  "path/to/historical.mif") # TODO.
+```
+
+This might take some time (up to 1min). After this, an R-object `data` should be available. Test this by typing `data` into the RStudio Console. The first rows of a *tibble* containing some REMIND data should appear. If a bunch of R-code appears, something went wrong.
+
+7. Open the section-Rmd-file in which you want to add the plot. The files are in the folder `inst/compareScenarios/` and have names of the form `cs_NN_XXXX.Rmd`, where `NN` is a two digit number and `XXXX` resembles the section title.
+8. You should be able to execute any chunk in the section Rmd by clicking the play button in its top right corner.
+9. Insert a new chunk by copying an old one or by pressing `CTRL+ALT+I`. Note: It is better to not assign names to the chunks as cs2 will crash if you used the same name twice.
+10. Add a new plot inside the chunk, e.g., `showLinePlots(data, "Your|Variable|Name")`. See [Plot Functions] below.
+11. Run your newly created chunk to see the plot.
+12. Run the following code to see your new plot in a PDF. If you used `loadModeltest()` in 6., mif-files should be available in `some/folder/`.
+
+```{r}
+compareScenarios(
+  projectLibrary = "remind2",
+  mifScen = c("path/to/scen1.mif", "path/to/scen2.mif"), # TODO.
+  mifHist = "path/to/historical.mif", # TODO.
+  outputFile = format(Sys.time(), "cs2-%Y%m%d-%H%M%S"),
+  sections = NN) # TODO: Replace NN by the number of the section you changed
+# (or by "all" to build the whole compare scenarios file, which will take a while).
+```
+
+13. Commit your changes. In the commit message, you may use the shorthand `cs2` to indicate that you made a change to compareScenarios, e.g., `cs2: added plot of My|Variable`.
+14. Make sure you pulled all recent changes to remind2. Then, call `lucode2::buildLibrary()` to check the code and increase the version number of the package. Commit again with the commit message `` `lucode2::buildLibrary()` ``. Push your commits to github.
+15. Create a pull request of your branch to the `master` branch of the `pik-piam/remind2` repository.
+
+# Preprocessing
+
+Most of the general setup for rendering the markdown files is done as part of the `piamPlotComparison` framework in  [cs_main.Rmd](https://github.com/pik-piam/piamPlotComparison/blob/master/inst/compareScenarios/cs_main.Rmd). Please refer to the  [vignette in piamPlotComparison](https://pik-piam.r-universe.dev/articles/piamPlotComparison/compareScenarios.html) for info on general data preparation steps, such as renaming scenarios, filtering regions and years, unifying variable names, setting global variables, etc.
+
+Any additional `remind2`-specific code to be executed as part of the general setup can be found in `inst/compareScenarios/preprocessing.R`. 
+
+This includes some data manipulation steps, such as:
+
+- Setting the global option `mip.histRefModel` that is used by the mip plotting function `showMultiLinePlotsByVariable`.
+- For a specified list of variables, a new per-capita-variable is created with the name `"<OLD_NAME> pCap"`.
+- For a specified list of variables, a new per-GDP-variable is created with the name `"<OLD_NAME> pGDP"`. As the denominator, the value of `GDP|PPP pCap` is used.
+
+Custom code will be executed after the general code.
+
+# Further Info
+
+For more detailed information on the underlying framework, please refer to the [vignette in piamPlotComparison](https://pik-piam.r-universe.dev/articles/piamPlotComparison/compareScenarios.html).

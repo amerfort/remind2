@@ -14,12 +14,12 @@
 #'
 #' @export
 #' @importFrom rlang .data
-#' @importFrom magclass mbind getYears collapseNames dimSums setNames mselect as.magpie write.report
+#' @importFrom magclass mbind getYears collapseNames setNames mselect as.magpie write.report
 #' @importFrom gdx readGDX
 #' @importFrom dplyr filter
 #' @importFrom ggplot2 ggplot aes labs geom_area geom_line geom_col scale_fill_brewer facet_grid theme_minimal
 #' @importFrom quitte as.quitte
-#' @importFrom luscale speed_aggregate
+#' @importFrom madrat toolAggregate
 
 reportMOFEX <- function(gdx, gdx_ref = NULL, file = NULL, scenario = "default") {
 
@@ -233,7 +233,7 @@ reportMOFEX <- function(gdx, gdx_ref = NULL, file = NULL, scenario = "default") 
   peFossilPrices_GLO <- new.magpie("GLO", getYears(peFossilPrices), magclass::getNames(peFossilPrices), fill = 0)
 
   for (i2e in names(int2ext)) {
-    peFossilPrices_GLO["GLO", , i2e] <- speed_aggregate(peFossilPrices[, , i2e], map, weight = peQtys[map$region, , int2ext[i2e]])
+    peFossilPrices_GLO["GLO", , i2e] <- toolAggregate(peFossilPrices[, , i2e], map, weight = peQtys[map$region, , int2ext[i2e]])
     for (t in getYears(peFossilPrices)) {
       if (all(peQtys[map$region, t, int2ext[i2e]] == 0)) {
         peFossilPrices_GLO["GLO", t, i2e] <- NA

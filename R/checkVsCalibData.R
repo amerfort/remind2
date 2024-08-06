@@ -18,10 +18,11 @@
 #' }
 #' @export
 checkVsCalibData <- function(gdx, outputDir = getwd(), outputFile = "Check_vs_CalibData.pdf") {
+
   yamlParams <- list(gdx = normalizePath(gdx, mustWork = TRUE))
 
   rmarkdown::render(
-    system.file("markdown/checkVsCalibData/rc_main.Rmd", package = "remind2"),
+    system.file("markdown", "checkVsCalibrationData.Rmd", package = "remind2"),
     output_dir = outputDir,
     output_file = outputFile,
     output_format = "pdf_document",

@@ -1,0 +1,210 @@
+# SDP
+
+## SDG 1
+
+```{r SDG 1}
+items <- c(
+  "Population|Extreme poverty",
+  "Population|Extreme poverty|International poverty line",
+  "Population|Poverty|LMIC poverty line",
+  "Population|Poverty|UMIC poverty line")
+walk(items, showLinePlots, data = data)
+```
+
+## SDG 3
+
+```{r SDG 3}
+items <- c(
+  "Premature mortality|PM2_5",
+  "Disability-Adjusted Life Year|PM2_5")
+walk(items, showLinePlots, data = data)
+```
+
+## SDG 4
+
+```{r SDG 4}
+items <- c(
+  "Population|Primary education",
+  "Population|Secondary education",
+  "Share of leaving cohort completing primary education",
+  "Share of leaving cohort completing secondary education",
+  "Number of people w/o secondary education",
+  "Share of adults w/o secondary education",
+  "Number of people w/ secondary education",
+  "Share of adults w/ secondary education",
+  "Number of people w/ no education",
+  "Share of adults w/ no education")
+walk(items, showLinePlots, data = data)
+```
+
+## SDG 5
+
+```{r SDG 5}
+items <- c(
+  "Population|Gender education gap|Primary",
+  "Population|Gender education gap|Secondary")
+walk(items, showLinePlots, data = data)
+```
+
+## SDG 6
+
+```{r SDG 6}
+items <- c(
+  "Water Consumption|Electricity",
+  "Water Consumption|Electricity w/o Hydro")
+walk(items, showLinePlots, data = data)
+```
+
+\newpage
+
+## SDG 7
+
+### access
+
+```{r SDG 7 access}
+items <- c(
+  "UE|per capita|Buildings",
+  "UE|per capita|Industry",
+  "UE|per capita|Transport|Pass",
+  "UE|per capita|Transport",
+  "FE|per capita|Buildings|Solids|Biomass|Traditional")
+walk(items, showLinePlots, data = data)
+```
+
+### modern
+
+```{r SDG 7 modern}
+items <- c(
+  "FE|Electricity|Share",
+  "UE|Electricity and Hydrogen|Share|Transport",
+  "UE|Electricity and Hydrogen|Share|Transport|Pass",
+  "Intensity|GDP|UE",
+  "FE|Buildings|Solids", # used as proxy for traditional biomass
+  "Energy Service|Buildings|UE intensity",
+  "Energy Service|Buildings|FE intensity",
+  "Intensity|Final Energy|Useful Energy|Transport",
+  "Intensity|GDP|Final Energy|Transport",
+  "Intensity|GDP|Useful Energy|Transport")
+walk(items, showLinePlots, data = data)
+```
+
+### clean
+
+```{r SDG 7 clean}
+items <- c(
+  "PE|Non-Biomass Renewables",
+  "SE|Electricity|Non-Biomass Renewables",
+  "Secondary Energy|Electricity|Share of renewables in gross demand|Estimation")
+walk(items, showLinePlots, data = data)
+```
+
+## SDG 8
+
+```{r SDG 8}
+items <- c(
+  "GDP|PPP|Per capita growth rate",
+  "GDP|PPP|Per capita ratio to OECD")
+walk(items, showLinePlots, data = data)
+```
+
+## SDG 9
+
+```{r SDG 9}
+items <- c(
+  "Final Energy|Industry|Electricity|Share",
+  "Final Energy|Industry|Hydrogen and Electricity|Share",
+  "Production|Industry|Cement|per-capita",
+  "Production|Industry|Steel|per-capita",
+  "Production|Industry|Steel|Primary|per-capita",
+  "Production|Industry|Steel|Secondary|per-capita",
+  "Value Added|Industry|Chemicals|per-capita",
+  "Value Added|Industry|Other Industry|per-capita")
+walk(items, showLinePlots, data = data)
+```
+
+## SDG 10
+
+```{r SDG 10}
+items <- c(
+  "Population|Relative poverty|wrt median income|Share",
+  "Inequality|Bottom 40% average income|Ratio")
+walk(items, showLinePlots, data = data)
+```
+
+## SDG 11
+
+```{r SDG 11}
+items <- c(
+  "Energy Service|per capita|Buildings|Residential|Floor Space",
+  "Air pollution concentration|PM2_5|Urban population")
+walk(items, showLinePlots, data = data)
+```
+
+\newpage
+
+## SDG 12
+
+```{r SDG 12}
+items <- c(
+  "Emi|CO2|Industry|Direct",
+  "Intensity|GDP|Final Energy")
+walk(items, showLinePlots, data = data)
+```
+
+## LCA
+
+```{r SDG 12 LCA}
+items <- c(
+  "Resource|Use|Mineral|Electricity",
+  "Ecotoxicity|Freshwater|Electricity",
+  "Ecotoxicity|Marine|Electricity",
+  "Eutrophication|Marine|Electricity",
+  "Human Toxicity|Electricity",
+  "Water Depletion|Electricity",
+  "Agricultural Land Occupation|Electricity",
+  "Natural Land Transformation|Electricity")
+walk(items, showLinePlots, data = data)
+```
+
+## SDG 13
+
+```{r SDG 13}
+items <- c(
+  "Emi|CO2",
+  "Emi|GHGtot",
+  "Temperature|Global Mean")
+walk(items, showLinePlots, data = data)
+```
+
+## SDG 14
+
+```{r SDG 14}
+items <- c(
+  "Ocean|New production",
+  "Ocean|Extension of suboxic zones",
+  "Ocean|Net primary production",
+  "Ocean|Carbonate Saturation|Aragonite",
+  "Ocean|Carbonate Saturation|Calcite",
+  "Ocean|pH value")
+walk(items, showLinePlots, data = data)
+```
+
+## SDG 16
+
+```{r SDG 16}
+items <- c(
+  "Political institutions|Equality before law and individual liberty",
+  "Conflict|Battle-related deaths|Probability of below 2005 value")
+walk(items, showLinePlots, data = data)
+```
+
+## SDG 17
+
+```{r SDG 17}
+items <- c(
+  "Policy Cost|Transfers",
+  "Policy Cost|GDP Loss",
+  "Policy Cost|GDP Loss|w/o transfers",
+  "Policy Cost|GDP Loss|Relative to Reference GDP")
+walk(items, showLinePlots, data = data)
+```

@@ -28,12 +28,7 @@ readPVP <- function(gdx, level="glo", enty="good"){
     tmp1[regi,,] <- tmp
     #getRegions(tmp1) <- sub("glob","GLO",getRegions(tmp1))
     tmp <- tmp1
-       if(level=="reg" & enty=="perm"){
-            tmp <- readGDX(gdx, name = c("pm_pvpRegi","p80_pvpRegi"), format="first_found")[ , , enty]
-       }
   }
-  
-#   getNames(tmp) <- attr(tmp, "description") # this causes trouble due to ambiguous set definition
-  
+  # getNames(tmp) <- attr(tmp, "description") # this causes trouble due to ambiguous set definition
   return(tmp)
 }

@@ -1,0 +1,288 @@
+---
+title: "Compare calibration targets"
+date: "`r format(Sys.Date())`"
+output:
+  html_document:
+    toc: no
+    keep_tex: false
+geometry: "a4paper,landscape,left=0.5cm,right=0.5cm,top=0.5cm,bottom=0.5cm,footnotesep=0.0cm,footskip=0.1cm"
+params:
+  gdxPaths: ""
+  gdxPathNames: null
+  figWidth: 16 
+  figHeight: 9
+  warning: no
+  message: no
+---
+
+<style>
+  .main-container {
+    max-width: 95% !important;
+  }
+  .toc-content {
+    padding-left: 0px !important;
+  }
+  .svg-container {
+    margin: auto !important;
+  }
+  img {
+    max-width: 100% !important;
+    display: block !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+</style>
+
+```{r setup, include=FALSE}
+library(svglite) # nolint
+
+knitr::opts_chunk$set(
+  echo = FALSE,
+  error = TRUE,
+  message = params$message,
+  warning = params$warning,
+  fig.width = params$figWidth,
+  fig.height = params$figHeight,
+  dev = "svglite",
+  fig.ext = ".svg",
+  dpi = 100
+)
+```
+
+
+```{r libraries, include=FALSE}
+# kableExtra must not be loaded before the call of library(kableExtra) below,
+# as its .onLoad() function must be called to tell knitr about add necessary
+# LaTeX libraries needed for tables.
+# If the following line is not included, successive calls to compareScenarios2()
+# may cause "Undefined control sequence" errors in LaTeX.
+try(unloadNamespace("kableExtra"), silent = TRUE)
+
+library(kableExtra) # nolint
+library(quitte) # nolint
+library(gdx) # nolint
+library(ggplot2) # nolint
+library(dplyr) # nolint
+library(madrat) # nolint
+```
+
+
+```{r read, include=FALSE}
+data <- NULL
+for (i in seq(length(params$gdxPaths))) {
+  tmp <- readGDX(params$gdxPaths[[i]], "pm_cesdata", restore_zeros = FALSE)[, , "quantity"] %>% dimReduce()
+  if (!is.null(params$gdxPathNames)) {
+    tmp <- add_dimension(tmp,
+      dim = 3.1, add = "scenario",
+      nm = params$gdxPathNames[[i]]
+    )
+  } else {
+    tmp <- add_dimension(tmp,
+      dim = 3.1, add = "scenario",
+      nm = gsub("\\.", "_", rev(setdiff(
+        strsplit(yamlParams$gdxPaths[[i]], "/|\\\\")[[1]], ""
+      ))[2])
+    )
+  }
+  data <- mbind(data, tmp)
+}
+
+allYears <- getYears(data, as.integer = TRUE)
+
+yearsUntil2050 <- getYears(data, as.integer = TRUE)[
+  getYears(data, as.integer = TRUE) <= 2050
+]
+
+regionsH12 <- toolGetMapping(name = "regionmappingH12.csv", type = "regional")
+regionsH12 <- unique(regionsH12$RegionCode)
+
+regionsEU <- toolGetMapping(name = "regionmapping_21_EU11.csv", type = "regional")
+regionsEU <- setdiff(unique(regionsEU$RegionCode), regionsH12)
+
+data <- as.quitte(data) %>% select(region, scenario, variable = all_in, period, value)
+
+.plot <- function(v, y, r) {
+  df <- data %>% filter(period %in% y, variable == v, region %in% r)
+
+  p <- ggplot() +
+    geom_line(
+      data = df,
+      aes(x = period, y = value, color = scenario), linewidth = 1
+    ) +
+    facet_wrap("region", scales = "free_y", ncol = 4) +
+    theme_minimal() +
+    theme(
+      axis.title.x = element_blank(),
+      axis.title.y = element_blank(),
+      legend.title = element_blank(),
+      legend.position = "bottom"
+    ) +
+    ggtitle(v) +
+    scale_color_brewer(palette = "Set1") +
+    expand_limits(y = 0)
+  return(p)
+}
+```
+
+# Results {.tabset .tabset-dropdown}
+
+## Years until 2050 {.tabset} 
+
+### Top Level
+```{r top-2050}
+vars <- c("inco", "lab", "kap")
+
+for (v in vars) {
+  if (any(regionsH12 %in% unique(data$region))) {
+    p <- .plot(v, yearsUntil2050, regionsH12)
+    print(p)
+  }
+
+  if (any(regionsEU %in% unique(data$region))) {
+    p <- .plot(v, yearsUntil2050, regionsEU)
+    print(p)
+  }
+}
+```
+
+
+### Buildings
+```{r buildings-2050}
+vars <- c("feelcb", "fehob", "fesob", "feelhpb", "feelrhb", "feheb", "fegab", "feh2b")
+
+for (v in vars) {
+  if (any(regionsH12 %in% unique(data$region))) {
+    p <- .plot(v, yearsUntil2050, regionsH12)
+    print(p)
+  }
+
+  if (any(regionsEU %in% unique(data$region))) {
+    p <- .plot(v, yearsUntil2050, regionsEU)
+    print(p)
+  }
+}
+```
+
+### Transportation
+```{r transportation-2050}
+vars <- c("entrp_pass_sm", "entrp_pass_lo", "entrp_frgt_sm", "entrp_frgt_lo")
+
+for (v in vars) {
+  if (any(regionsH12 %in% unique(data$region))) {
+    p <- .plot(v, yearsUntil2050, regionsH12)
+    print(p)
+  }
+
+  if (any(regionsEU %in% unique(data$region))) {
+    p <- .plot(v, yearsUntil2050, regionsEU)
+    print(p)
+  }
+}
+```
+
+### Industry
+```{r industry-2050}
+vars <- c(
+  "ue_cement", "feso_cement", "feli_cement", "fega_cement", "feh2_cement",
+  "feel_cement", "kap_cement", "ue_chemicals", "feso_chemicals", "feli_chemicals",
+  "fega_chemicals", "feh2_chemicals", "feelhth_chemicals", "feelwlth_chemicals",
+  "kap_chemicals", "ue_steel_primary", "feso_steel", "feli_steel", "fega_steel",
+  "feh2_steel", "feel_steel_primary", "kap_steel_primary", "ue_steel_secondary",
+  "kap_steel_secondary", "feel_steel_secondary", "ue_otherInd", "feso_otherInd",
+  "feli_otherInd", "fega_otherInd", "feh2_otherInd", "fehe_otherInd",
+  "feelhth_otherInd", "feelwlth_otherInd", "kap_otherInd"
+)
+
+for (v in vars) {
+  if (any(regionsH12 %in% unique(data$region))) {
+    p <- .plot(v, yearsUntil2050, regionsH12)
+    print(p)
+  }
+
+  if (any(regionsEU %in% unique(data$region))) {
+    p <- .plot(v, yearsUntil2050, regionsEU)
+    print(p)
+  }
+}
+```
+
+## All years {.tabset}
+
+### Top Level
+```{r top-all}
+vars <- c("inco", "lab", "kap")
+for (v in vars) {
+  if (any(regionsH12 %in% unique(data$region))) {
+    p <- .plot(v, allYears, regionsH12)
+    print(p)
+  }
+
+  if (any(regionsEU %in% unique(data$region))) {
+    p <- .plot(v, allYears, regionsEU)
+    print(p)
+  }
+}
+```
+
+### Buildings
+```{r buildings-all}
+vars <- c("feelcb", "fehob", "fesob", "feelhpb", "feelrhb", "feheb", "fegab", "feh2b")
+
+for (v in vars) {
+  if (any(regionsH12 %in% unique(data$region))) {
+    p <- .plot(v, allYears, regionsH12)
+    print(p)
+  }
+
+  if (any(regionsEU %in% unique(data$region))) {
+    p <- .plot(v, allYears, regionsEU)
+    print(p)
+  }
+
+  print(p)
+}
+```
+
+### Transportation
+```{r transportation-all}
+vars <- c("entrp_pass_sm", "entrp_pass_lo", "entrp_frgt_sm", "entrp_frgt_lo")
+
+for (v in vars) {
+  if (any(regionsH12 %in% unique(data$region))) {
+    p <- .plot(v, allYears, regionsH12)
+    print(p)
+  }
+
+  if (any(regionsEU %in% unique(data$region))) {
+    p <- .plot(v, allYears, regionsEU)
+    print(p)
+  }
+}
+```
+
+### Industry
+```{r industry-all}
+vars <- c(
+  "ue_cement", "feso_cement", "feli_cement", "fega_cement", "feh2_cement",
+  "feel_cement", "kap_cement", "ue_chemicals", "feso_chemicals",
+  "feli_chemicals", "fega_chemicals", "feh2_chemicals", "feelhth_chemicals",
+  "feelwlth_chemicals", "kap_chemicals", "ue_steel_primary", "feso_steel",
+  "feli_steel", "fega_steel", "feh2_steel", "feel_steel_primary",
+  "kap_steel_primary", "ue_steel_secondary", "kap_steel_secondary",
+  "feel_steel_secondary", "ue_otherInd", "feso_otherInd", "feli_otherInd",
+  "fega_otherInd", "feh2_otherInd", "fehe_otherInd", "feelhth_otherInd",
+  "feelwlth_otherInd", "kap_otherInd"
+)
+
+for (v in vars) {
+  if (any(regionsH12 %in% unique(data$region))) {
+    p <- .plot(v, allYears, regionsH12)
+    print(p)
+  }
+
+  if (any(regionsEU %in% unique(data$region))) {
+    p <- .plot(v, allYears, regionsEU)
+    print(p)
+  }
+}
+```

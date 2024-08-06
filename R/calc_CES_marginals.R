@@ -36,16 +36,16 @@ calc_CES_marginals <- function(gdxName, id = 'file') {
   
   .calc_CES_marginals <- function(gdxName, id) {
     # ---- read required items from gdx ----
-    pm_cesdata <- read.gdx(gdxName, 'pm_cesdata', factors = FALSE,
+    pm_cesdata <- read.gdx(gdxName, 'pm_cesdata',
                            colNames = c('t', 'regi', 'pf', 'param', 'value'))
     
-    vm_effGr <- read.gdx(gdxName, 'vm_effGr', factors = FALSE,
+    vm_effGr <- read.gdx(gdxName, 'vm_effGr',
                          colNames = c('t', 'regi', 'pf', 'effGr'))
     
-    vm_cesIO <- read.gdx(gdxName, 'vm_cesIO', factors = FALSE,
+    vm_cesIO <- read.gdx(gdxName, 'vm_cesIO',
                          colNames = c('t', 'regi', 'pf', 'value'))
     
-    cesOut2cesIn <- read.gdx(gdxName, 'cesOut2cesIn', factors = FALSE,
+    cesOut2cesIn <- read.gdx(gdxName, 'cesOut2cesIn',
                              colNames = c('pf.out', 'pf.in'))
     
     # ---- calculate marginals ----
@@ -138,8 +138,7 @@ calc_CES_marginals <- function(gdxName, id = 'file') {
     if (id) {
       r <- r %>% 
         mutate(!!sym('scenario') := read.gdx(gdxName, 'c_expname', 
-                                             colNames = 'c_expname',
-                                             factors = FALSE) %>% 
+                                             colNames = 'c_expname') %>% 
                  pull('c_expname'))
     }
     

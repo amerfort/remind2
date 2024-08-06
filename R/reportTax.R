@@ -19,7 +19,7 @@
 #'
 #' @export
 #' @importFrom gdx readGDX
-#' @importFrom magclass mbind getYears getNames setNames dimSums setItems
+#' @importFrom magclass mbind getYears getNames setNames setItems
 
 reportTax <- function(gdx,output=NULL,regionSubsetList=NULL,t=c(seq(2005,2060,5),seq(2070,2110,10),2130,2150)){
   # old tax reporting was deleted, stop if old tax reporting would be needed
@@ -45,8 +45,8 @@ reportTax <- function(gdx,output=NULL,regionSubsetList=NULL,t=c(seq(2005,2060,5)
   out <- NULL
 
   ### FE taxes/subsidies per sector
-  fe_tax  <- readGDX(gdx, name=c("pm_tau_fe_tax"), format="first_found", react = "silent")[,t,] * tdptwyr2dpgj
-  fe_sub  <- readGDX(gdx, name=c("pm_tau_fe_sub"), format="first_found", react = "silent")[,t,] * tdptwyr2dpgj
+  fe_tax  <- readGDX(gdx, name=c("p21_tau_fe_tax","pm_tau_fe_tax"), format="first_found", react = "silent")[,t,] * tdptwyr2dpgj
+  fe_sub  <- readGDX(gdx, name=c("p21_tau_fe_sub","pm_tau_fe_sub"), format="first_found", react = "silent")[,t,] * tdptwyr2dpgj
 
   vm_demFeSector <- readGDX(gdx,name=c("vm_demFeSector"),field="l",format="first_found",restore_zeros=FALSE)[,t,]*TWa_2_EJ
   vm_demFeSector[is.na(vm_demFeSector)] <- 0
@@ -224,10 +224,6 @@ reportTax <- function(gdx,output=NULL,regionSubsetList=NULL,t=c(seq(2005,2060,5)
   p21_taxrevPE2SE0 <- readGDX(gdx, name=c("p21_taxrevPE2SE0"), format= "first_found")[,t,]*1000
   out <- mbind(out, setNames(p21_taxrevPE2SE0,"Net Taxes|PE2SE Technologies (billion US$2005/yr)"))
 
-  #technology specific new capacity subsidies or taxes revenue
-  p21_taxrevTech0 <- readGDX(gdx, name=c("p21_taxrevTech0"), format= "first_found")[,t,]*1000
-  out <- mbind(out, setNames(p21_taxrevTech0,"Net Taxes|Technologies delta cap (billion US$2005/yr)"))
-
   # exports tax
   p21_taxrevXport0 <- readGDX(gdx, name=c("p21_taxrevXport0"), format= "first_found")[,t,]*1000
   out <- mbind(out, setNames(p21_taxrevXport0,"Net Taxes|Exports (billion US$2005/yr)"))
@@ -312,5 +308,6 @@ reportTax <- function(gdx,output=NULL,regionSubsetList=NULL,t=c(seq(2005,2060,5)
   out["GLO",,vars] <- NA
   out[names(regionSubsetList),,vars] <- NA
 
+  getSets(out)[3] <- "variable"
   return(out)
 }

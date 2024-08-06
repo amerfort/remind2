@@ -58,8 +58,10 @@ outfile    <- "validationSummary.pdf"
 hist       <- NULL
 
 # Download test data from PIK's RSE server
-download.file("http://rse.pik-potsdam.de/data/example/fulldata.gdx", "fulldata.gdx",mode = "wb")
-download.file("http://rse.pik-potsdam.de/data/example/REMIND_generic_RCP26.mif", "REMIND_generic_RCP26.mif")
+download.file("https://rse.pik-potsdam.de/data/example/fulldata.gdx",
+	      "fulldata.gdx", mode = "wb")
+download.file("https://rse.pik-potsdam.de/data/example/REMIND_generic_RCP26.mif",
+	      "REMIND_generic_RCP26.mif")
 
 ```
 

@@ -2,8 +2,8 @@
 % Please edit documentation in R/reportCrossVariables.R
 \name{reportCrossVariables}
 \alias{reportCrossVariables}
-\title{Read in GDX and calculate variables that need variables produced by other report*.R functions, used in convGDX2MIF.R for the
-reporting}
+\title{Read in GDX and calculate variables that need variables produced by other
+report*.R functions, used in convGDX2MIF.R for the reporting}
 \usage{
 reportCrossVariables(
   gdx,
@@ -33,5 +33,5 @@ Read in GDX and calculate variables that need variables produced by other report
 
 }
 \author{
-Lavinia Baumstark
+Lavinia Baumstark, Falk Benke
 }

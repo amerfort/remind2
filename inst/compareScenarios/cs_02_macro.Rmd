@@ -1,0 +1,315 @@
+# Macro
+
+
+## Consumption
+
+```{r Consumption}
+showLinePlots(data, "Consumption")
+```
+
+
+## Population
+
+```{r Population}
+showLinePlots(data, "Population")
+```
+
+## GDP - MER
+
+```{r GDP - MER}
+showLinePlots(data, "GDP|MER")
+
+for (item in grep("^GDP\\|MER\\|.*(Macro-Economic Climate Damage|chronic physical risk damage estimate)", levels(data$variable), value = TRUE)) {
+  showLinePlots(data, item)
+  showAreaAndBarPlots(data, item, "GDP|MER", scales = "fixed")
+}
+```
+
+## GDP - PPP
+
+```{r GDP - PPP}
+showLinePlots(data, "GDP|PPP")
+
+for (item in grep("^GDP\\|PPP\\|.*(Macro-Economic Climate Damage|chronic physical risk damage estimate)", levels(data$variable), value = TRUE)) {
+  showLinePlots(data, item)
+  showAreaAndBarPlots(data, item, "GDP|PPP", scales = "fixed")
+}
+
+if ("Damage factor" %in% levels(data$variable)) {
+  showLinePlots(data, "Damage factor")
+}
+```
+
+## GDP - MER per Capita
+
+```{r GDP - MER per Capita}
+showLinePlots(data, "GDP|MER pCap")
+```
+
+## GDP - PPP per Capita
+
+```{r GDP - PPP per Capita}
+showLinePlots(data, "GDP|PPP pCap")
+```
+
+## GDP - PPP growth rate
+```{r GDP - PPP growth rate}
+showLinePlots(quitte::calc_growthrate(data, only.new = TRUE, filter.function = "GDP|PPP"), "GDP|PPP [Growth Rate]")
+```
+
+## GDP - MER growth rate
+```{r GDP - MER growth rate}
+showLinePlots(quitte::calc_growthrate(data, only.new = TRUE, filter.function = "GDP|MER"), "GDP|MER [Growth Rate]")
+```
+
+## Capital Stock
+
+
+```{r Capital Stock}
+showLinePlots(data, "Capital Stock|Non-ESM")
+```
+
+## Investments
+
+```{r Investments}
+showLinePlots(data, "Investments|Non-ESM")
+```
+
+
+## Interest Rate
+
+```{r Interest Rate}
+showLinePlots(data, "Interest Rate (t+1)/(t-1)|Real")
+```
+
+
+## GDP Disaggregation
+
+### Top-level GDP Disaggregation
+
+```{r GDP Disaggregation}
+
+tot <- "GDP|MER"
+items <- c(
+  "Internal|CES Function|Value|lab",
+  "Internal|CES Function|Value|kap",
+  "Internal|CES Function|Value|entrp",
+  "Internal|CES Function|Value|enb",
+  "Internal|CES Function|Value|ue_industry")
+
+showAreaAndBarPlots(data, items, tot, scales = "fixed")
+```
+
+
+### Transport Value Disaggregation
+
+```{r Transport Value Disaggregtion}
+
+tot <- "Internal|CES Function|Value|entrp"
+items <- c(
+  "Internal|CES Function|Value|entrp_pass_sm",
+  "Internal|CES Function|Value|entrp_pass_lo",
+  "Internal|CES Function|Value|entrp_frgt_sm",
+  "Internal|CES Function|Value|entrp_frgt_lo")
+
+showAreaAndBarPlots(data, items, tot, scales = "fixed")
+```
+
+### Buildings Value Disaggregation
+
+```{r Buildings Value Disaggregtion}
+
+tot <- "Internal|CES Function|Value|enb"
+items <- c(
+  "Internal|CES Function|Value|enhb",
+  "Internal|CES Function|Value|feelcb")
+
+showAreaAndBarPlots(data, items, tot, scales = "fixed")
+```
+
+
+### Industry Value Disaggregation
+
+```{r Industry Value Disaggregtion}
+
+tot <- "Internal|CES Function|Value|ue_industry"
+items <- c(
+  "Internal|CES Function|Value|ue_steel",
+  "Internal|CES Function|Value|ue_cement",
+  "Internal|CES Function|Value|ue_chemicals",
+  "Internal|CES Function|Value|ue_otherInd")
+
+showAreaAndBarPlots(data, items, tot, scales = "fixed")
+```
+
+
+
+## Prices
+
+```{r Prices preprocessing}
+# Local (this subsection) preprocessing for all price variables.
+dPrice <- data %>%
+    filter(scenario != "historical") %>%
+    filter(str_starts(variable, "Price")) %>%
+    filter(str_ends(variable, "Rawdata")) %>%
+    filter(period >= 2010) %>% # 2005 values are invalid
+    droplevels()
+```
+
+### PE Prices
+
+```{r PE Prices}
+vars <-
+  levels(dPrice$variable) %>%
+  str_subset("^Price\\|Primary Energy\\|")
+walk(vars, showLinePlots, data = dPrice, scale = "fixed")
+```
+
+### SE Prices
+
+
+```{r SE Prices}
+vars <-
+  levels(dPrice$variable) %>%
+  str_subset("^Price\\|Secondary Energy\\|")
+walk(vars, showLinePlots, data = dPrice, scale = "fixed")
+```
+
+### FE|Buildings Prices
+
+```{r FE Buildings Prices}
+carriers <- c("Solids", "Liquids", "Gases", "Hydrogen", "Heat", "Electricity")
+vars <- intersect(paste0("Price|Final Energy|Buildings|", carriers, "|Rawdata"),
+                  levels(dPrice$variable))
+walk(vars, showLinePlots, data = dPrice, scale = "fixed")
+```
+
+### FE|Industry Prices
+
+```{r FE Industry Prices}
+carriers <- c("Solids", "Liquids", "Gases", "Hydrogen", "Heat", "Electricity")
+vars <- intersect(paste0("Price|Final Energy|Industry|", carriers, "|Rawdata"),
+                  levels(dPrice$variable))
+walk(vars, showLinePlots, data = dPrice, scale = "fixed")
+```
+
+### FE|Transport Prices
+
+```{r FE Transport Prices}
+carriers <- c("Solids", "Liquids", "Gases", "Hydrogen", "Heat", "Electricity")
+vars <- intersect(paste0("Price|Final Energy|Transport|", carriers, "|Rawdata"),
+                  levels(dPrice$variable))
+walk(vars, showLinePlots, data = dPrice, scale = "fixed")
+```
+
+## Trade
+
+```{r Trade}
+vars <-
+  levels(data$variable) %>%
+  str_subset("^Trade\\|[^|]*$")
+walk(vars, showLinePlots, data = data)
+```
+
+## FE intensity of GDP_PPP, area plot
+
+```{r FE intensity of GDP_PPP, area plot (by sector)}
+items <- c(
+  "FE|Transport pGDP_PPP",
+  "FE|Buildings pGDP_PPP",
+  "FE|Industry pGDP_PPP")
+showAreaAndBarPlots(data, items, scales = "fixed")
+```
+
+## FE intensity of GDP_PPP, line plot
+
+```{r FE intensity of GDP_PPP, line plot (by sector)}
+dIea <-
+  data %>%
+  # To make the plots less crowded, show only IEA historical data.
+  filter(scenario != "historical" | model == "IEA")
+items <- c(
+  "FE|Transport pGDP_PPP",
+  "FE|Buildings pGDP_PPP",
+  "FE|Industry pGDP_PPP")
+showMultiLinePlots(dIea, items, scales = "fixed")
+showMultiLinePlotsByVariable(dIea, items, "GDP|PPP pCap", scales = "fixed")
+```
+
+## Kaya Decomposition
+
+```{r Kaya Decomposition}
+d <-
+  data %>%
+  filter(variable %in% c("Emi|CO2|Energy", "FE", "GDP|MER",  "GDP|PPP","Population")) %>%
+  filter(scenario != "historical") %>%
+  select(model, scenario, region, variable, unit, period, value)
+oldUnits <-
+  d %>%
+  distinct(variable, unit)
+kaya <-
+  d %>%
+  select(-unit) %>%
+  pivot_wider(names_from = variable, values_from = value) %>%
+  mutate(
+    emiCO2_by_FE = `Emi|CO2|Energy` / FE,
+    FE_by_GDP_MER = FE / `GDP|MER`,
+    FE_by_GDP_PPP = FE / `GDP|PPP`,
+    GDP_MER_by_Pop = `GDP|MER` / Population,
+    GDP_PPP_by_Pop = `GDP|PPP` / Population,
+    `Emi|CO2|Energy` = NULL, FE = NULL, `GDP|MER` = NULL, `GDP|PPP` = NULL) %>%
+  pivot_longer(
+    c(emiCO2_by_FE, FE_by_GDP_MER, FE_by_GDP_PPP, GDP_MER_by_Pop, GDP_PPP_by_Pop, Population),
+    names_to = "variable",
+    values_to = "value")
+kayaUnits <- tribble(
+  ~variable, ~unit,
+  "Population", "million",
+  "GDP_MER_by_Pop", "billion US$2005/yr/million",
+  "GDP_PPP_by_Pop", "billion US$2005/yr/million",
+  "FE_by_GDP_MER", "EJ/billion US$2005",
+  "FE_by_GDP_PPP", "EJ/billion US$2005",
+  "emiCO2_by_FE", "EJ/Mt CO2")
+kayaVars <- kayaUnits$variable
+kaya <-
+  kaya %>%
+  left_join(kayaUnits, by = "variable") %>%
+  as.quitte()
+
+refYear <- getOption("kaya.refYear")
+kayaRef <-
+  kaya %>%
+  filter(period == refYear) %>%
+  select(-period) %>%
+  rename(refValue = value)
+kayaRel <-
+  kaya %>%
+  left_join(kayaRef, by = c("model", "scenario", "region", "variable", "unit")) %>%
+  mutate(
+    value = value / refValue,
+    unit = paste0("relative to ", refYear),
+    refValue = NULL) %>%
+  as.quitte()
+```
+
+### Absolute
+
+```{r Kaya Decomposition Absolute}
+showMultiLinePlots(kaya, kayaVars, nrowNum = 2)
+walk(kayaVars, showRegiLinePlots, data = kaya)
+```
+
+```{r Kaya Decomposition Relative text, results='asis'}
+cat("### Relative to ", refYear, "\n")
+```
+
+```{r Kaya Decomposition Relative}
+showMultiLinePlots(kayaRel, kayaVars, nrowNum = 2)
+walk(kayaVars, showRegiLinePlots, data = kayaRel)
+```
+
+### Components
+
+```{r Kaya Components}
+walk(kayaVars, showLinePlots, data = kaya)
+```

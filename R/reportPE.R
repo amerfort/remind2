@@ -19,7 +19,7 @@
 #' 
 #' @export
 #' @importFrom gdx readGDX
-#' @importFrom magclass mselect getYears dimSums getNames<- mbind setNames
+#' @importFrom magclass mselect getYears getNames<- mbind setNames
 
 reportPE <- function(gdx,regionSubsetList=NULL,t=c(seq(2005,2060,5),seq(2070,2110,10),2130,2150)){
   ####### conversion factors ##########
@@ -27,6 +27,7 @@ reportPE <- function(gdx,regionSubsetList=NULL,t=c(seq(2005,2060,5),seq(2070,211
   ####### read in needed data #########
   ## sets
   pe2se    <- readGDX(gdx,"pe2se")
+  te       <- readGDX(gdx, "te")
   tefosccs <- readGDX(gdx,c("teFosCCS","tefosccs"),format="first_found")
   teccs    <- readGDX(gdx,c("teCCS","teccs"),format="first_found")
   tenoccs  <- readGDX(gdx,c("teNoCCS","tenoccs"),format="first_found")
@@ -117,6 +118,10 @@ reportPE <- function(gdx,regionSubsetList=NULL,t=c(seq(2005,2060,5),seq(2070,211
   tmp2 <- mbind(tmp2,setNames(dimSums(mselect(prodSE,all_enty=c("pegeo","pehyd","pewin","pesol")),dim=3),"PE|Non-Biomass Renewables (EJ/yr)"))
   tmp2 <- mbind(tmp2,setNames(dimSums(mselect(prodSE,all_enty="pehyd"),dim=3),    "PE|+|Hydro (EJ/yr)"))
   tmp2 <- mbind(tmp2,setNames(dimSums(mselect(prodSE,all_enty="pewin"),dim=3),    "PE|+|Wind (EJ/yr)"))
+  if ("windoff" %in% te) {
+    tmp2 <- mbind(tmp2,setNames(dimSums(mselect(prodSE,all_enty="pewin",all_te="wind"),dim=3),    "PE|Wind|+|Onshore (EJ/yr)"))  
+    tmp2 <- mbind(tmp2,setNames(dimSums(mselect(prodSE,all_enty="pewin",all_te="windoff"),dim=3), "PE|Wind|+|Offshore (EJ/yr)"))
+  }
   tmp2 <- mbind(tmp2,setNames(dimSums(mselect(prodSE,all_enty="pesol"),dim=3),    "PE|+|Solar (EJ/yr)"))
   tmp2 <- mbind(tmp2,setNames(dimSums(mselect(prodSE,all_enty="pegeo"),dim=3),    "PE|+|Geothermal (EJ/yr)"))
                 
@@ -125,6 +130,8 @@ reportPE <- function(gdx,regionSubsetList=NULL,t=c(seq(2005,2060,5),seq(2070,211
                 pe_carrier(demPE,dataoc,oc2te,sety,pebio,"seel",teccs,               name="PE|Biomass|Electricity|w/ CC (EJ/yr)"),
                 pe_carrier(demPE,dataoc,oc2te,sety,pebio,"seel",tenoccs,             name="PE|Biomass|Electricity|w/o CC (EJ/yr)"),
                 pe_carrier(demPE,dataoc,oc2te,sety,pebio,se_Gas,                     name="PE|Biomass|Gases (EJ/yr)"),
+                pe_carrier(demPE,dataoc,oc2te,sety,pebio,se_Gas,teccs,               name="PE|Biomass|Gases|w/ CC (EJ/yr)"),
+                pe_carrier(demPE,dataoc,oc2te,sety,pebio,se_Gas,tenoccs,             name="PE|Biomass|Gases|w/o CC (EJ/yr)"),
                 pe_carrier(demPE,dataoc,oc2te,sety,pebio,"seh2",                     name="PE|Biomass|Hydrogen (EJ/yr)"),
                 pe_carrier(demPE,dataoc,oc2te,sety,pebio,"seh2",teccs,               name="PE|Biomass|Hydrogen|w/ CC (EJ/yr)"),
                 pe_carrier(demPE,dataoc,oc2te,sety,pebio,"seh2",tenoccs,             name="PE|Biomass|Hydrogen|w/o CC (EJ/yr)"),
@@ -194,6 +201,7 @@ reportPE <- function(gdx,regionSubsetList=NULL,t=c(seq(2005,2060,5),seq(2070,211
   # add other region aggregations
   if (!is.null(regionSubsetList))
     out <- mbind(out, calc_regionSubset_sums(out, regionSubsetList))
-  
+
+  getSets(out)[3] <- "variable"
   return(out)
 }

@@ -1,6 +1,0 @@
-# Climate
-
-```{r Climate}
-showLinePlots(data, "Forcing")
-showLinePlots(data, "Temperature|Global Mean")
-```

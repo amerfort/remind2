@@ -1,0 +1,74 @@
+# Technology capital costs
+
+## Electricity generating technology capital costs vs. time (by regions)
+### Renewables, storage and nuclear
+```{r Renewables, storage and nuclear}
+showLinePlots(data, "Tech|Electricity|Solar|PV|Capital Costs")
+showLinePlots(data, "Tech|Electricity|Wind|Onshore|Capital Costs")
+showLinePlots(data, "Tech|Electricity|Wind|Offshore|Capital Costs")
+showLinePlots(data, "Tech|Electricity|Storage|Battery|For PV|Capital Costs")
+showLinePlots(data, "Tech|Electricity|Nuclear|Capital Costs")
+```
+
+### Direct and indirect electrifications
+```{r Direct and indirect electrifications}
+showLinePlots(data, "Tech|Heat|Electricity|Heat Pump|Capital Costs")
+showLinePlots(data, "Tech|Hydrogen|Electricity|Capital Costs")
+showLinePlots(data, "Tech|Liquids|Hydrogen|Capital Costs")
+```
+
+### Carbon management technologies
+```{r Carbon management technologies}
+showLinePlots(data, "Tech|Hydrogen|Gas|w/ CC|Capital Costs")
+showLinePlots(data, "Tech|CO2 Storage|Capital Costs|w/ Adj Costs")
+showLinePlots(data, "Tech|DAC|Capital Costs|w/ Adj Costs")
+```
+
+### Gas technologies
+```{r Gas technologies}
+showLinePlots(data, "Tech|Electricity|Gas|Combined Cycle w/ CC|Capital Costs")
+showLinePlots(data, "Tech|Electricity|Gas|Gas Turbine|Capital Costs")
+showLinePlots(data, "Tech|Electricity|Gas|Combined Heat and Power w/o CC|Capital Costs")
+```
+
+### Coal technologies
+```{r Coal technologies}
+showLinePlots(data, "Tech|Electricity|Coal|Pulverised Coal w/ CC|Capital Costs")
+showLinePlots(data, "Tech|Electricity|Coal|Gasification Combined Cycle w/o CC|Capital Costs")
+showLinePlots(data, "Tech|Electricity|Coal|Combined Heat and Power w/o CC|Capital Costs")
+showLinePlots(data, "Tech|Heat|Coal|Capital Costs")
+```
+
+## Learning renewables and storage vs. cumulative capacity (regional comparison)
+```{r Learning renewables and storage vs. cumulative capacity (regional comparison)}
+showMultiLinePlotsByVariable(data, "Tech|Electricity|Solar|PV|Capital Costs", "Cumulative Cap|Electricity|Solar", scales = "fixed")
+showMultiLinePlotsByVariable(data, "Tech|Electricity|Wind|Onshore|Capital Costs", "Cumulative Cap|Electricity|Wind|Onshore", scales = "fixed", showHistorical = FALSE)
+showMultiLinePlotsByVariable(data, "Tech|Electricity|Wind|Offshore|Capital Costs", "Cumulative Cap|Electricity|Wind|Offshore", scales = "fixed", showHistorical = FALSE)
+showMultiLinePlotsByVariable(data, "Tech|Electricity|Storage|Battery|For PV|Capital Costs", "Cumulative Cap|Electricity|Storage|Battery|For PV", scales = "fixed", showHistorical = FALSE)
+```
+
+## Capital cost of non-renewables vs. years (regional comparison)
+```{r Capital cost of non-renewables vs. years (regional comparison)}
+items1 <- c(
+"Tech|Heat|Electricity|Heat Pump|Capital Costs",
+"Tech|Hydrogen|Electricity|Capital Costs",
+"Tech|Liquids|Hydrogen|Capital Costs",
+"Tech|Hydrogen|Gas|w/ CC|Capital Costs",
+"Tech|CO2 Storage|Capital Costs|w/ Adj Costs",
+"Tech|DAC|Capital Costs|w/ Adj Costs",
+NULL)
+
+showMultiLinePlots(data, items1, nrowNum = 3)
+
+items2 <- c(
+"Tech|Electricity|Gas|Combined Cycle w/ CC|Capital Costs",
+"Tech|Electricity|Gas|Gas Turbine|Capital Costs",
+"Tech|Electricity|Gas|Combined Heat and Power w/o CC|Capital Costs",
+"Tech|Electricity|Coal|Pulverised Coal w/ CC|Capital Costs",
+"Tech|Electricity|Coal|Gasification Combined Cycle w/o CC|Capital Costs",
+"Tech|Electricity|Coal|Combined Heat and Power w/o CC|Capital Costs",
+"Tech|Heat|Coal|Capital Costs",
+NULL)
+showMultiLinePlots(data, items2, nrowNum = 3)
+
+```

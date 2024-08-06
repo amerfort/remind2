@@ -1,0 +1,23 @@
+# Climate
+## MAGICC6
+
+```{r Climate}
+showLinePlots(data, "Forcing")
+showLinePlots(data, "Temperature|Global Mean")
+```
+
+## MAGICCv7.5.3 AR6
+```{r MAGICC7 AR6}
+magiccvar <- c("Effective Radiative Forcing|Basket|Anthropogenic",
+               "Surface Temperature (GSAT)",
+               "Atmospheric Concentrations|CO2")
+
+for (mv in magiccvar) {
+  fullvar <- paste0("MAGICC7 AR6|", mv, "|50.0th Percentile")
+  if (fullvar %in% levels(data$variable)) {
+    showLinePlots(data, fullvar)
+    print(plotPercentiles(data, variables = paste0("MAGICC7 AR6|", mv)))
+    cat("\n\n")
+  }
+}
+```

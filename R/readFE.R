@@ -12,7 +12,7 @@
 #' 
 #' @export
 #' @importFrom gdx readGDX
-#' @importFrom magclass dimSums getNames<-
+#' @importFrom magclass getNames<-
 readFE <- function(gdx){
   fe <- readGDX(gdx,c("vm_prodFe","v_feprod"),field="l",restore_zeros = FALSE,react="silent")
   fe <- dimSums(fe,dim=3)

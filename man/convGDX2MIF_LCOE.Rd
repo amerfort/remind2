@@ -31,8 +31,9 @@ Read in all information from GDX file, calculate the LCOE for pe2se technologies
 the LCOE .mif reporting
 }
 \examples{
-
-\dontrun{convGDX2MIF(gdx,gdx_ref,file="REMIND_generic_LCOE.csv",scenario="default")}
+\dontrun{
+convGDX2MIF(gdx, gdx_ref, file = "REMIND_generic_LCOE.csv", scenario = "default")
+}
 
 }
 \author{

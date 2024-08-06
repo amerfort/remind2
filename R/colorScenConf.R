@@ -28,9 +28,9 @@ colorScenConf <- function(fileList = "", remindPath = ".", expanddata = FALSE) {
                             comment.char = "", na.strings = "", dec = "."))
   }
   if (expanddata) {
-    source(file.path(remindPath, "scripts", "start", "path_gdx_list.R"), local = TRUE)
-    # overwrite readCheckScenarioConfig
-    source(file.path(remindPath, "scripts", "start", "readCheckScenarioConfig.R"), local = TRUE)
+    message("Loading R helper functions from remindmodel.") # overwrite readCheckScenarioConfig
+    remindRscripts <- list.files(file.path(remindPath, "scripts", "start"), pattern = "\\.R$", full.names = TRUE)
+    invisible(sapply(remindRscripts, source, local = TRUE))
   }
   # enable script to match default data not in gms
   try(cfg$gms[["output"]] <- paste0(cfg$output, collapse = ","))
@@ -58,7 +58,7 @@ colorScenConf <- function(fileList = "", remindPath = ".", expanddata = FALSE) {
   for (csvFile in fileList) {
     xlsxFile <- sub(".csv", "_colorful.xlsx", csvFile, fixed = TRUE)
     cat(paste0("\nStart converting '", csvFile, "' to '..._colorful.xlsx'.\n"))
-    settings <- readCheckScenarioConfig(csvFile, remindPath = remindPath, fillWithDefault = TRUE)
+    settings <- readCheckScenarioConfig(csvFile, remindPath = remindPath, fillWithDefault = TRUE, testmode = TRUE)
     settings <- rbind(rep("unknown", length(names(settings))), settings)
     for (switchname in intersect(names(cfg$gms), names(settings))) {
       settings[1, switchname] <- cfg$gms[[switchname]]

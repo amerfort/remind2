@@ -20,6 +20,7 @@
 #' @importFrom data.table fread fwrite rbindlist copy CJ setnames := data.table as.data.table
 #' @importFrom dplyr %>%
 #' @importFrom quitte as.quitte
+#' @importFrom utils capture.output
 #' @export
 
 reportEDGETransport <- function(output_folder=".",

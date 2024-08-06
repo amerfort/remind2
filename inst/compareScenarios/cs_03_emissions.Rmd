@@ -1,0 +1,481 @@
+\newpage
+
+# Emissions
+
+## GHG - total
+
+```{r GHG total}
+
+showLinePlots(
+  data, 
+  vars = "Emi|GHG", 
+  histVars = c("Emi|GHGtot", "Emi|GHG")
+)
+
+items <- c(
+  "scenario" = "Emi|GHG", # scenario
+  "historical" = "Emi|GHGtot" # historical
+) 
+
+showLinePlotsWithTarget(data, items)
+```
+
+```{r GHG - total w/ Bunkers}
+showLinePlots(data, "Emi|GHG|w/ Bunkers")
+```
+
+```{r GHG - total with national LULUCF accounting - should match UNFCCC reporting}
+showLinePlots(data, "Emi|GHG|w/ Bunkers|LULUCF national accounting")
+```
+
+
+##  GHG Sectors
+
+### GHG Energy
+```{r GHG Energy}
+showLinePlots(data, "Emi|GHG|Energy")
+```
+
+### GHG Industrial Processes
+```{r GHG Industrial Processes}
+showLinePlots(data, "Emi|GHG|Industrial Processes")
+```
+
+### GHG Agriculture
+```{r GHG Agriculture}
+showLinePlots(data, "Emi|GHG|Agriculture")
+```
+
+### GHG Waste
+```{r GHG Waste}
+showLinePlots(data, "Emi|GHG|Waste")
+```
+
+## GHG - Market
+
+### ETS
+```{r GHG ETS}
+items <- "Emi|GHG|ETS"
+showLinePlots(data, items)
+showLinePlotsWithTarget(data, items)
+```
+
+
+### ESR
+```{r GHG ESR}
+items <- "Emi|GHG|ESR"
+showLinePlots(data, items)
+showLinePlotsWithTarget(data, items)
+```
+
+Note: Reduction targets wrt 2005
+
+
+### Other - Outside ETS and ESR
+```{r GHG Other}
+showLinePlots(data, "Emi|GHG|Outside ETS and ESR")
+```
+
+
+## CO2
+### CO2 by sector (net emissions, incl. BECCS)
+```{r CO2 by sector net incl. BECCS}
+tot <- "Emi|CO2"
+items <- c(
+  "Emi|CO2|Land-Use Change",
+  "Emi|CO2|Industrial Processes",
+  "Emi|CO2|Energy|Demand|Transport",
+  "Emi|CO2|Energy|Demand|Industry",
+  "Emi|CO2|Energy|Demand|Buildings",
+  "Emi|CO2|Energy|Supply|Non-electric",
+  "Emi|CO2|Energy|Supply|Electricity w/ couple prod",
+  "Emi|CO2|CDR|DACCS",
+  "Emi|CO2|CDR|EW",
+  "Emi|CO2|Energy|Waste"
+  )
+showAreaAndBarPlots(data, items, tot, scales = "fixed")
+```
+
+
+### Total CO2
+
+```{r CO2 total}
+showLinePlots(data, "Emi|CO2")
+```
+
+
+### Energy and Industrial Processes - Net (incl BECCS)
+
+```{r CO2 Energy and Industry}
+showLinePlots(
+  data, 
+  vars = "Emi|CO2|Energy and Industrial Processes", 
+  histVars = "Emi|CO2|Fossil Fuels and Industry"
+)
+```
+
+
+### Energy and Industrial Processes - Gross
+
+```{r CO2 Energy and Industry Gross}
+showLinePlots(
+  data, 
+  vars = "Emi|CO2|Gross|Energy and Industrial Processes", 
+  histVars = "Emi|CO2|Fossil Fuels and Industry"
+)
+```
+
+
+### Energy
+
+```{r CO2 Energy}
+showLinePlots(data, "Emi|CO2|Energy")
+```
+
+
+### Energy Supply
+
+```{r CO2 Energy Supply}
+showLinePlots(
+  data, 
+  vars = "Emi|CO2|Energy|Supply", 
+  histVars = c("Emi|CO2|Energy|Supply", "Emi|CO2|Fossil Fuels and Industry|Energy Supply")
+)
+```
+
+
+### Electricity
+
+```{r CO2 Electricity}
+showLinePlots(
+  data, 
+  vars = "Emi|CO2|Energy|Supply|Electricity w/ couple prod", 
+  histVars = c("Emi|CO2|Energy|Supply|Electricity w/ couple prod", "Emi|CO2|Energy|Supply|Electricity")
+)
+```
+
+
+### Electricity and Heat
+
+```{r CO2 Electricity and Heat}
+showLinePlots(data, vars = "Emi|CO2|Energy|Supply|Electricity and Heat")
+```
+
+
+### Buildings
+
+```{r CO2 Buildings}
+showLinePlots(
+  data, 
+  vars = "Emi|CO2|Energy|Demand|Buildings", 
+  histVars = c("Emi|CO2|Energy|Demand|Buildings", "Emi|CO2|Buildings|Direct")
+)
+```
+
+
+### Industry
+
+```{r CO2 Industry}
+showLinePlots(
+  data, 
+  vars = "Emi|CO2|Energy|Demand|Industry",
+  histVars = c("Emi|CO2|Energy|Demand|Industry", "Emi|CO2|Industry|Direct")
+)
+```
+
+
+### Industry, Gross
+
+```{r CO2 Industry Gross}
+showLinePlots(
+  data, 
+  vars = "Emi|CO2|Gross|Energy|Demand|Industry",
+  histVars = "Emi|CO2|Industry|Direct"
+)
+```
+
+
+### Industry with Industrial Processes
+
+```{r CO2 Industry with Industrial Processes}
+showLinePlots(data, "Emi|CO2|Industry")
+```
+
+
+### Transport
+
+```{r CO2 Transport}
+showLinePlots(data, "Emi|CO2|Energy|Demand|Transport")
+```
+
+
+### International Bunkers
+
+```{r CO2 Bunkers}
+showLinePlots(data, "Emi|CO2|Energy|Demand|Transport|International Bunkers")
+```
+
+
+### Process Emissions
+
+```{r CO2 Process Emissions}
+showLinePlots(data, "Emi|CO2|Industrial Processes")
+```
+
+```{r CO2 Process Emissions}
+tot <- c("Emi|CO2|Industrial Processes")
+items <- c(
+      "Emi|CO2|Industrial Processes|Chemicals",
+      "Emi|CO2|Industrial Processes|Cement"
+      )
+showAreaAndBarPlots(data, items, tot, scales = "fixed")
+```
+
+#### Process Emissions Cement
+
+```{r}
+showLinePlots(
+  data, 
+  vars = "Emi|CO2|Industrial Processes|Cement", 
+  histVars = c("Emi|CO2|Industrial Processes|Cement", "Emi|CO2|Industrial Processes|Minerals")
+)
+```
+
+
+#### Process Emissions Chemicals
+
+```{r}
+showLinePlots(data, "Emi|CO2|Industrial Processes|Chemicals")
+```
+
+#### Process Emissions Metals
+
+```{r}
+showLinePlots(data, "Emi|CO2|Industrial Processes|Metals")
+```
+
+### Land-Use Change
+
+```{r CO2 Land-Use Change}
+showLinePlots(
+  data, 
+  vars = "Emi|CO2|Land-Use Change", 
+  c("Emi|CO2|Land-Use Change", "Emi|CO2|Land Use")
+)
+```
+
+```{r CO2 Land-Use Change - LULUCF national accounting}
+showLinePlots(
+  data, 
+  vars = "Emi|CO2|Land-Use Change|LULUCF national accounting",
+  histVars = "Emi|CO2|Land Use"
+)
+```
+
+
+
+### non-BECCS CDR
+
+```{r CO2 non-BECCS CDR}
+showLinePlots(data, "Emi|CO2|non-BECCS CDR")
+```
+
+### CDR
+#### CDR compared to other CO2 emissions
+```{r CDR compared to other CO2 emissions}
+tot <- "Emi|CO2"
+items <- c(
+  "Emi|CO2|Gross|Energy and Industrial Processes",
+  "Emi|CO2|Land-Use Change",
+  "Emi|CO2|CDR|BECCS",
+  "Emi|CO2|CDR|Industry CCS|Synthetic Fuels",
+  "Emi|CO2|CDR|DACCS",
+  "Emi|CO2|CDR|EW"
+)
+showAreaAndBarPlots(data, items, tot, scales = "fixed")
+```
+
+#### Only CDR
+```{r CO2 CDR Detail}
+tot <- "Emi|CO2|CDR"
+items <- c(
+  "Emi|CO2|CDR|Land-Use Change",
+  "Emi|CO2|CDR|BECCS|Pe2Se",
+  "Emi|CO2|CDR|BECCS|Industry",
+  "Emi|CO2|CDR|Industry CCS|Synthetic Fuels",
+  "Emi|CO2|CDR|DACCS",
+  "Emi|CO2|CDR|EW"
+)
+showAreaAndBarPlots(data, items, tot, scales = "fixed")
+```
+
+#### CDR Subcategories - Line
+```{r CO2 CDR Subcategories - Line}
+cdrVars <-
+  levels(data$variable) %>%
+  str_subset(fixed("Emi|CO2|CDR|"))
+walk(cdrVars, showLinePlots, data = data)
+```
+
+
+### Cumulated Emissions
+
+```{r CO2 Cumulated}
+d <-
+  data %>%
+  filter(variable == "Emi|CO2|Cumulated")
+# subtract 2010 values
+d <-
+  d %>%
+  left_join(
+    d %>% filter(period == 2010),
+    by = c("model", "scenario", "region", "variable"),
+    suffix = c("", "2010")) %>%
+  mutate(value = value - value2010)
+showLinePlots(d)
+```
+
+
+```{r CO2 Cumulated Subcategories}
+cdrVars <-
+  levels(data$variable) %>%
+  str_subset(fixed("Emi|CO2|Cumulated|CDR|"))
+walk(cdrVars, showLinePlots, data = data)
+```
+
+```{r CO2 Cumulated bar plots}
+tot <- "Emi|CO2|Cumulated"
+items <- c(
+  "Emi|CO2|Cumulated|Gross|Energy and Industrial Processes",
+  "Emi|CO2|Cumulated|Land-Use Change",
+  "Emi|CO2|Cumulated|CDR|BECCS|Pe2Se",
+  "Emi|CO2|Cumulated|CDR|BECCS|Industry",
+  "Emi|CO2|Cumulated|CDR|Industry CCS|Synthetic Fuels",
+  "Emi|CO2|Cumulated|CDR|DACCS",
+  "Emi|CO2|Cumulated|CDR|EW")
+showAreaAndBarPlots(data, items, tot, scales = "fixed")
+```
+
+## Market Emissions
+
+### GHG ETS Emissions
+
+```{r GHG ETS Market Emissions}
+tot <- "Emi|GHG|ETS"
+items <- c(
+  "Emi|GHG|ETS|Energy Supply",
+  "Emi|GHG|ETS|Industry",
+  "Emi|GHG|ETS|Transport",
+  "Emi|GHG|ETS|Extraction",
+  "Emi|GHG|ETS|Waste",
+  "Emi|GHG|ETS|non-BECCS CDR")
+showAreaAndBarPlots(data, items, tot, scales = "fixed")
+```
+
+### GHG ESR Emissions
+
+```{r GHG ESR Market Emissions}
+tot <- "Emi|GHG|ESR"
+items <- c(
+  "Emi|GHG|ESR|Buildings",
+  "Emi|GHG|ESR|Industry",
+  "Emi|GHG|ESR|Transport",
+  "Emi|GHG|ESR|Agriculture",
+  "Emi|GHG|ESR|Waste")
+showAreaAndBarPlots(data, items, tot, scales = "fixed")
+```
+
+### GHG Other Emissions - Outside ETS and ESR
+
+```{r GHG Other Market Emissions}
+tot <- "Emi|GHG|Outside ETS and ESR"
+items <- c(
+  "Emi|GHG|Outside ETS and ESR|Transport",
+  "Emi|GHG|Outside ETS and ESR|Land-Use Change",
+  "Emi|GHG|Outside ETS and ESR|F-Gases")
+showAreaAndBarPlots(data, items, tot, scales = "fixed")
+```
+
+### Market Emissions across GHGs
+
+```{r GHG Market Emissions}
+showLinePlots(data, "Emi|CO2|ETS")
+showLinePlots(data, "Emi|CO2|ESR")
+showLinePlots(data, "Emi|CO2|Outside ETS and ESR")
+```
+
+### Market CH4
+
+```{r CH4 Market Emissions}
+showLinePlots(data, "Emi|CH4|ETS")
+showLinePlots(data, "Emi|CH4|ESR")
+showLinePlots(data, "Emi|CH4|Outside ETS and ESR")
+```
+
+### Market N2O
+
+```{r N2O Market Emissions}
+showLinePlots(data, "Emi|N2O|ETS")
+showLinePlots(data, "Emi|N2O|ESR")
+showLinePlots(data, "Emi|N2O|Outside ETS and ESR")
+```
+
+
+## CH4
+
+```{r CH4 by sector}
+tot <- "Emi|CH4"
+items <- c(
+  "Emi|CH4|Extraction",
+  "Emi|CH4|Agriculture",
+  "Emi|CH4|Land-Use Change",
+  "Emi|CH4|Waste",
+  "Emi|CH4|Energy Supply")
+showAreaAndBarPlots(data, items, tot, scales = "fixed")
+```
+
+## N2O
+
+```{r N2O by sector}
+tot <- "Emi|N2O"
+items <- c(
+  "Emi|N2O|Agriculture",
+  "Emi|N2O|Land-Use Change",
+  "Emi|N2O|Waste",
+  "Emi|N2O|Transport",
+  "Emi|N2O|Industry",
+  "Emi|N2O|Energy Supply")
+showAreaAndBarPlots(data, items, tot, scales = "fixed")
+```
+
+## F-Gases
+
+```{r F-Gases}
+showLinePlots(data, "Emi|GHG|F-Gases")
+```
+
+## SO2
+```{r SO2 Emissions}
+tot <- "Emi|SO2"
+items <- c(
+  "Emi|SO2|Energy Demand|Buildings",
+  "Emi|SO2|Energy Demand|Industry",
+  "Emi|SO2|Energy Demand|Transport",
+  "Emi|SO2|Energy Supply",
+  "Emi|SO2|Land Use",
+  "Emi|SO2|Solvents",
+  "Emi|SO2|Waste")
+showAreaAndBarPlots(data, items, tot, scales = "fixed")
+```
+
+## Industry Subsector Emissions
+
+```{r Industry Subsector Emissions}
+items <- c(
+  "Emi|CO2|Energy|Demand|Industry|Steel",
+  "Emi|CO2|Energy|Demand|Industry|Cement",
+  "Emi|CO2|Energy|Demand|Industry|Chemicals",
+  "Emi|CO2|Energy|Demand|Industry|Other Industry")
+showAreaAndBarPlots(data, items, scales = "fixed")
+walk(items, showLinePlots, data = data)
+```

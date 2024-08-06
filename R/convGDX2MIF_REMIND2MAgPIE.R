@@ -27,13 +27,25 @@ convGDX2MIF_REMIND2MAgPIE <- function(gdx, file = NULL, scenario = "default",
   # ADD EU-27 region aggregation if possible
   if("EUR" %in% names(regionSubsetList)){
     regionSubsetList <- c(regionSubsetList, list(
-      "EU27" = c("ENC", "EWN", "ECS", "ESC", "ECE", "FRA"," DEU", "ESW")
+      "EU27" = c("ENC", "EWN", "ECS", "ESC", "ECE", "FRA","DEU", "ESW")
     ))
   }
 
-  # reporting of variables that need variables from different other report functions
+  output <- NULL
+  message("running reportMacroEconomy...")
+  output <- mbind(output,reportMacroEconomy(gdx,regionSubsetList,t)[,t,])
+  message("running reportPE...")
+  output <- mbind(output,reportPE(gdx,regionSubsetList,t)[,t,])
+  message("running reportSE...")
+  output <- mbind(output,reportSE(gdx,regionSubsetList,t)[,t,])
+  message("running reportFE...")
+  output <- mbind(output,reportFE(gdx,regionSubsetList,t))
+  message("running reportExtraction...")
+  output <- mbind(output,reportExtraction(gdx,regionSubsetList,t)[,t,])
+  message("running reportEmi...")
+  output <- mbind(output,reportEmi(gdx,output,regionSubsetList,t)[,t,])    # needs output from reportFE
   message("running reportPrices...")
-  output <- reportPrices(gdx = gdx, regionSubsetList = regionSubsetList, t = t)[, t, ] # needs output from reportSE, reportFE, reportEmi, reportExtraction, reportMacroEconomy
+  output <- mbind(output,reportPrices(gdx,output,regionSubsetList,t)[,t,]) # needs output from reportSE, reportFE, reportEmi, reportExtraction, reportMacroEconomy
 
   # Add dimension names "scenario.model.variable"
   magclass::getSets(output)[3] <- "variable"

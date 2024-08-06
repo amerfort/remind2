@@ -26,7 +26,7 @@ compareCalibrationTargets <- function(gdxPaths, outputDir = getwd(),
     gdxPathNames = names(gdxPaths)
   )
   rmarkdown::render(
-    system.file("markdown/compareCalibrationTargets/cct_main.Rmd", package = "remind2"),
+    system.file("markdown/compareCalibrationTargets.Rmd", package = "remind2"),
     output_dir = outputDir,
     output_file = outputFile,
     output_format = "html_document",

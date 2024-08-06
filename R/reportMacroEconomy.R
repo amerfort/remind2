@@ -20,7 +20,8 @@
 #'
 #' @export
 #' @importFrom gdx readGDX
-#' @importFrom magclass setNames mbind getYears dimSums new.magpie getRegions setYears
+#' @importFrom magclass setNames mbind getYears new.magpie getRegions setYears
+#' @importFrom madrat toolAggregate
 
 reportMacroEconomy <- function(gdx, regionSubsetList = NULL,
                                t = c(seq(2005, 2060, 5), seq(2070, 2110, 10), 2130, 2150)) {
@@ -64,6 +65,8 @@ reportMacroEconomy <- function(gdx, regionSubsetList = NULL,
     buil_mod <- "simple"
   }
 
+  steel_process_based <- "steel" %in% readGDX(gdx, "secInd37Prc", react='silent')
+
   # choose the CES entries names for transport
   name_trsp <- c("fepet", "ueLDVt", "fedie", "ueHDVt", "feelt", "ueelTt")
   name_trsp <- name_trsp[name_trsp %in% getNames(vm_cesIO)]
@@ -86,8 +89,8 @@ reportMacroEconomy <- function(gdx, regionSubsetList = NULL,
 
   # Calculate net GDP using the damage factors
   tintersect <- intersect(getYears(gdp), getYears(damageFactor))
-  gdp_net <- setNames(gdp[,tintersect,]*damageFactor[,tintersect,], "GDP|MER|Net_afterDamages (billion US$2005/yr)")  
-  gdp_ppp_net <- setNames(gdp_ppp[,tintersect,]*damageFactor[,tintersect,], "GDP|PPP|Net_afterDamages (billion US$2005/yr)")  
+  gdp_net <- setNames(gdp[,tintersect,]*damageFactor[,tintersect,], "GDP|MER|Net_afterDamages (billion US$2005/yr)")
+  gdp_ppp_net <- setNames(gdp_ppp[,tintersect,]*damageFactor[,tintersect,], "GDP|PPP|Net_afterDamages (billion US$2005/yr)")
 
   ies                     <- readGDX(gdx, c("pm_ies", "p_ies"), format = "first_found")
   c_damage                <- readGDX(gdx, "cm_damage", "c_damage", format = "first_found", react = "silent")
@@ -134,41 +137,8 @@ reportMacroEconomy <- function(gdx, regionSubsetList = NULL,
     }
   }
 
-  if (buil_mod %in% c("services_putty", "services_with_capital")) {
-    #-Capital Stocks
-    cap <- mbind(setNames(vm_cesIO[, , "kaphc"] * 1000, "Capital Stock|Non-ESM|Space Conditioning (billion US$2005)"),
-                 setNames(vm_cesIO[, , "kapal"] * 1000, "Capital Stock|Non-ESM|Appliances and Light (billion US$2005)"),
-                 setNames(vm_cesIO[, , "kapsc"] * 1000, "Capital Stock|Non-ESM|Space Cooling (billion US$2005)"),
-                 setNames(vm_cesIO[, , "kap"] * 1000, "Capital Stock|Non-ESM|Macro (billion US$2005)"))
-    cap <- mbind(cap, setNames(cap[, , "Capital Stock|Non-ESM|Space Conditioning (billion US$2005)"]
-                               + cap[, , "Capital Stock|Non-ESM|Appliances and Light (billion US$2005)"]
-                               + cap[, , "Capital Stock|Non-ESM|Space Cooling (billion US$2005)"],
-                               "Capital Stock|Non-ESM|End-use (billion US$2005)"))
-    cap <- mbind(cap, setNames(cap[, , "Capital Stock|Non-ESM|End-use (billion US$2005)"]
-                               + cap[, , "Capital Stock|Non-ESM|Macro (billion US$2005)"],
-                               "Capital Stock|Non-ESM (billion US$2005)"))
-
-    #-Capital investments
-
-    invM <- mbind(
-      setNames(vm_invMacro[, , "kaphc"] * 1000, "Investments|Non-ESM|Space Conditioning (billion US$2005/yr)"),
-      setNames(vm_invMacro[, , "kapal"] * 1000, "Investments|Non-ESM|Appliances and Light (billion US$2005/yr)"),
-      setNames(vm_invMacro[, , "kapsc"] * 1000, "Investments|Non-ESM|Space Cooling (billion US$2005/yr)"),
-      setNames(vm_invMacro[, , "kap"] * 1000, "Investments|Non-ESM|Macro (billion US$2005/yr)")
-    )
-    invM <- mbind(invM, setNames(invM[, , "Investments|Non-ESM|Space Conditioning (billion US$2005/yr)"]
-                                 + invM[, , "Investments|Non-ESM|Appliances and Light (billion US$2005/yr)"]
-                                 + invM[, , "Investments|Non-ESM|Space Cooling (billion US$2005/yr)"],
-                                 "Investments|Non-ESM|End-use (billion US$2005/yr)"))
-
-    invM <- mbind(invM, setNames(invM[, , "Investments|Non-ESM|End-use (billion US$2005/yr)"]
-                                 + invM[, , "Investments|Non-ESM|Macro (billion US$2005/yr)"],
-                                 "Investments|Non-ESM (billion US$2005/yr)"))
-
-  } else {
-    cap <- setNames(vm_cesIO[, , "kap"] * 1000, "Capital Stock|Non-ESM (billion US$2005)")
-    invM <- setNames(vm_invMacro[, , "kap"] * 1000, "Investments|Non-ESM (billion US$2005/yr)")
-  }
+  cap <- setNames(vm_cesIO[, , "kap"] * 1000, "Capital Stock|Non-ESM (billion US$2005)")
+  invM <- setNames(vm_invMacro[, , "kap"] * 1000, "Investments|Non-ESM (billion US$2005/yr)")
 
   inv <- setNames(invM[, , "Investments|Non-ESM (billion US$2005/yr)"] + invE, "Investments (billion US$2005/yr)")
   # TODO: add p80_curracc
@@ -198,22 +168,7 @@ reportMacroEconomy <- function(gdx, regionSubsetList = NULL,
     ces <- mbind(ces, setNames(vm_cesIO[, , "fesob"] * TWa_2_EJ, "CES_input|fesob (EJ/yr)"))
     ces <- mbind(ces, setNames(vm_cesIO[, , "feheb"] * TWa_2_EJ, "CES_input|feheb (EJ/yr)"))
     ces <- mbind(ces, setNames(vm_cesIO[, , "feh2b"] * TWa_2_EJ, "CES_input|feh2b (EJ/yr)"))
-  } else if (buil_mod %in% c("services_putty", "services_with_capital")) {
-    ces <- mbind(ces, setNames(vm_cesIO[, , "fealelb"] * TWa_2_EJ, "CES_input|fealelb (EJ/yr)"))
-    ces <- mbind(ces, setNames(vm_cesIO[, , "fescelb"] * TWa_2_EJ, "CES_input|fescelb (EJ/yr)"))
-
-    ces <- mbind(ces, setNames(vm_cesIO[, , "uescb"] * TWa_2_EJ, "CES_input|uescb (EJ/yr)"))
-    ces <- mbind(ces, setNames(vm_cesIO[, , "ueshb"] * TWa_2_EJ, "CES_input|ueshb (EJ/yr)"))
-    ces <- mbind(ces, setNames(vm_cesIO[, , "ueswb"] * TWa_2_EJ, "CES_input|ueswb (EJ/yr)"))
-    ces <- mbind(ces, setNames(vm_cesIO[, , "uealb"] * TWa_2_EJ, "CES_input|uealb (EJ/yr)"))
-    ces <- mbind(ces, setNames(vm_cesIO[, , "uecwb"] * TWa_2_EJ, "CES_input|uecwb (EJ/yr)"))
-
-
-    ces <- mbind(ces, setNames(vm_cesIO[, , "kapal"] * 1000, "CES_input|kapal (billion US$2005)"))
-    ces <- mbind(ces, setNames(vm_cesIO[, , "kapsc"] * 1000, "CES_input|kapsc (billion US$2005)"))
-    ces <- mbind(ces, setNames(vm_cesIO[, , "kaphc"] * 1000, "CES_input|kaphc (billion US$2005)"))
-  }
-
+  } 
 
   if (indu_mod == "fixed_shares") {
     ces <- mbind(ces, setNames(vm_cesIO[, , "feeli"] * TWa_2_EJ, "CES_input|feeli (EJ/yr)"))
@@ -310,8 +265,13 @@ reportMacroEconomy <- function(gdx, regionSubsetList = NULL,
                   "feh2_chemicals.feli_chemicals",
                   "feh2_cement.fega_cement",
                   "feh2_cement.feso_cement",
-                  "feh2_cement.feli_cement",
-                  "feh2_steel.feso_steel")
+                  "feh2_cement.feli_cement")
+
+  if (!steel_process_based) {
+    mrs.report <- append(mrs.report,
+                  "feh2_steel.feso_steel"
+                  )
+  }
 
   }
 
@@ -328,11 +288,14 @@ reportMacroEconomy <- function(gdx, regionSubsetList = NULL,
 
                     setNames(CES.price[,,"Internal|CES Function|CES Price|feelhpb (US$2005/GJ)"] /
                                CES.price[,,"Internal|CES Function|CES Price|feh2b (US$2005/GJ)"],
-                             "Internal|CES Function|MRS|feelhpb|feh2b (ratio)"),
+                             "Internal|CES Function|MRS|feelhpb|feh2b (ratio)"))
 
+  if (!steel_process_based) {
+    CES.mrs <- mbind( CES.mrs,
                     setNames(CES.price[,,"Internal|CES Function|CES Price|feel_steel_secondary (US$2005/GJ)"] /
                                CES.price[,,"Internal|CES Function|CES Price|feso_steel (US$2005/GJ)"],
                              "Internal|CES Function|MRS|feel_steel_secondary|feso_steel (ratio)"))
+  }
   }
 
   ## 3.) Value generated by CES Inputs (price * quantity)
@@ -358,7 +321,7 @@ reportMacroEconomy <- function(gdx, regionSubsetList = NULL,
 
   # calculate global aggregation for the damage factor, weighted by MER GDP
   mapping <- data.frame(region=getRegions(out),world="GLO",stringsAsFactors=FALSE)
-  glo_damageFactor <- speed_aggregate(damageFactor[,tintersect,], mapping, weight = gdp[,tintersect,])
+  glo_damageFactor <- toolAggregate(damageFactor[,tintersect,], rel = mapping, weight = gdp[,tintersect,])
 
   # add global region aggregation
   out <- mbind(out, dimSums(out, dim = 1))
@@ -381,11 +344,11 @@ reportMacroEconomy <- function(gdx, regionSubsetList = NULL,
   # calculate interest rate
   inteRate <- new.magpie(getRegions(out),
                          getYears(out),
-                         c("Interest Rate (t+1)/(t-1)|Real ()", "Interest Rate t/(t-1)|Real ()"),
-                         fill = 0)
+                         c("Interest Rate (t+1)/(t-1)|Real (unitless)", "Interest Rate t/(t-1)|Real (unitless)"),
+                         fill = NA)
   for (t in getYears(out[, which(getYears(out, as.integer = TRUE) > 2005 &
                                  getYears(out, as.integer = TRUE) < max(getYears(out, as.integer = TRUE))), ])) {
-    inteRate[, t, "Interest Rate (t+1)/(t-1)|Real ()"] <-
+    inteRate[, t, "Interest Rate (t+1)/(t-1)|Real (unitless)"] <-
        (1
         - ((setYears(pm_pvp[, (which(getYears(pm_pvp) == t) + 1), ], t) /
               setYears(pm_pvp[, (which(getYears(pm_pvp) == t) - 1), ], t))
@@ -393,7 +356,7 @@ reportMacroEconomy <- function(gdx, regionSubsetList = NULL,
                      getYears(pm_pvp[, (which(getYears(pm_pvp) == t) - 1), ], as.integer = TRUE)))
            )
        )
-    inteRate[, t, "Interest Rate t/(t-1)|Real ()"] <-
+    inteRate[, t, "Interest Rate t/(t-1)|Real (unitless)"] <-
       (1
        - ((pm_pvp[, t, ] / setYears(pm_pvp[, (which(getYears(pm_pvp) == t) - 1), ], t))
            ^ (1 / (getYears(pm_pvp[, t, ], as.integer = TRUE) - getYears(pm_pvp[, (which(getYears(pm_pvp) == t) - 1), ],
@@ -403,5 +366,6 @@ reportMacroEconomy <- function(gdx, regionSubsetList = NULL,
   }
   # add interest rate
   out <- mbind(out, inteRate)
+  getSets(out)[3] <- "variable"
   return(out)
 }

@@ -1,0 +1,130 @@
+parent;                           child;                                     factor
+;;
+# total FE primary steel production;;
+FE|Industry|Steel|++|Primary;     FE|Industry|Steel|+|Solids;1
+FE|Industry|Steel|++|Primary;     FE|Industry|Steel|+|Liquids;1
+FE|Industry|Steel|++|Primary;     FE|Industry|Steel|+|Gases;1
+FE|Industry|Steel|++|Primary;     FE|Industry|Steel|+|Hydrogen;1
+FE|Industry|Steel|++|Primary;     FE|Industry|Steel|Primary|Electricity;1
+;;
+# total FE secondary steel production;;
+FE|Industry|Steel|++|Secondary;   FE|Industry|Steel|Secondary|Electricity;1
+;;
+# total GHG emissions by sectors with separation into gross and negative emissions;;
+Emi|GHG;Emi|GHG|Gross|Energy|Supply|Electricity;1
+Emi|GHG;Emi|GHG|Gross|Energy|Supply|Non-electric;1
+Emi|GHG;Emi|GHG|Energy|Demand|+|Buildings;1
+Emi|GHG;Emi|GHG|Gross|Energy|Demand|+|Industry;1
+Emi|GHG;Emi|GHG|Energy|Demand|+|Transport;1
+Emi|GHG;Emi|GHG|Energy|Demand|+|CDR;1
+Emi|GHG;Emi|GHG|Gross|Energy|+|Waste;1
+Emi|GHG;Emi|GHG|+++|Industrial Processes;1
+Emi|GHG;Emi|GHG|+++|Waste;1
+Emi|GHG;Emi|GHG|+++|Agriculture;1
+Emi|GHG;Emi|GHG|+++|Land-Use Change;1
+Emi|GHG;Emi|CO2|CDR|BECCS;1
+Emi|GHG;Emi|CO2|CDR|DACCS;1
+Emi|GHG;Emi|CO2|CDR|Industry CCS|Synthetic Fuels;1
+Emi|GHG;Emi|CO2|CDR|EW;1
+Emi|GHG;Emi|CO2|CDR|Materials|+|Plastics;1
+;;
+# total CO2 emissions by sectors with separation into gross and negative emissions;;
+Emi|CO2;Emi|CO2|Gross|Energy|Supply|+|Electricity;1
+Emi|CO2;Emi|CO2|Gross|Energy|Supply|Non-electric;1
+Emi|CO2;Emi|CO2|Energy|Demand|+|Transport;1
+Emi|CO2;Emi|CO2|Gross|Energy|Demand|+|Industry;1
+Emi|CO2;Emi|CO2|Energy|Demand|+|Buildings;1
+Emi|CO2;Emi|CO2|Energy|Demand|+|CDR;1
+Emi|CO2;Emi|CO2|+|Land-Use Change;1
+Emi|CO2;Emi|CO2|+|Industrial Processes;1
+Emi|CO2;Emi|CO2|CDR|BECCS;1
+Emi|CO2;Emi|CO2|CDR|Industry CCS|Synthetic Fuels;1
+Emi|CO2;Emi|CO2|CDR|DACCS;1
+Emi|CO2;Emi|CO2|CDR|EW;1
+Emi|CO2;Emi|CO2|Gross|Energy|+|Waste;1
+Emi|CO2;Emi|CO2|CDR|Materials|+|Plastics;1
+;;
+# total GHG emissions by CO2 sectors and non-CO2 gases;;
+Emi|GHG 1;Emi|CO2|+|Energy;1
+Emi|GHG 1;Emi|CO2|+|Industrial Processes;1
+Emi|GHG 1;Emi|CO2|+|Land-Use Change;1
+Emi|GHG 1;Emi|GHG|+|CH4;1
+Emi|GHG 1;Emi|GHG|+|N2O;1
+Emi|GHG 1;Emi|GHG|+|F-Gases;1
+Emi|GHG 1;Emi|CO2|+|non-BECCS CDR;1
+;;
+# cumulated total CO2 emissions by sectors with separation into gross and negative emissions;;
+Emi|CO2|Cumulated;Emi|CO2|Cumulated|Land-Use Change;1
+Emi|CO2|Cumulated;Emi|CO2|Cumulated|Industrial Processes;1
+Emi|CO2|Cumulated;Emi|CO2|Cumulated|Energy|Demand|Transport;1
+Emi|CO2|Cumulated;Emi|CO2|Cumulated|Gross|Energy|Demand|Industry;1
+Emi|CO2|Cumulated;Emi|CO2|Cumulated|Energy|Demand|Buildings;1
+Emi|CO2|Cumulated;Emi|CO2|Cumulated|Energy|Demand|CDR;1
+Emi|CO2|Cumulated;Emi|CO2|Cumulated|Gross|Energy|Supply|Non-electric;1
+Emi|CO2|Cumulated;Emi|CO2|Cumulated|Gross|Energy|Supply|Electricity;1
+Emi|CO2|Cumulated;Emi|CO2|Cumulated|Gross|Energy|Waste;1
+Emi|CO2|Cumulated;Emi|CO2|Cumulated|CDR|BECCS;1
+Emi|CO2|Cumulated;Emi|CO2|Cumulated|CDR|Industry CCS|Synthetic Fuels;1
+Emi|CO2|Cumulated;Emi|CO2|Cumulated|CDR|DACCS;1
+Emi|CO2|Cumulated;Emi|CO2|Cumulated|CDR|EW;1
+Emi|CO2|Cumulated;Emi|CO2|Cumulated|CDR|Materials|Plastics;1
+;;
+# total CDR;;
+Emi|CO2|CDR;Emi|CO2|CDR|Land-Use Change;1
+Emi|CO2|CDR;Emi|CO2|CDR|BECCS|Pe2Se;1
+Emi|CO2|CDR;Emi|CO2|CDR|BECCS|Industry;1
+Emi|CO2|CDR;Emi|CO2|CDR|Industry CCS|Synthetic Fuels;1
+Emi|CO2|CDR;Emi|CO2|CDR|DACCS;1
+Emi|CO2|CDR;Emi|CO2|CDR|EW;1
+Emi|CO2|CDR;Emi|CO2|CDR|Materials|+|Plastics;1
+;;
+# check balance of SE|Electricity electricity generation with the electricity demand variables by sector;;
+SE|Electricity;SE|Input|Electricity|Hydrogen|Synthetic Fuels|+|Liquids;1
+SE|Electricity;SE|Input|Electricity|Hydrogen|Synthetic Fuels|+|Gases;1
+SE|Electricity;SE|Input|Electricity|Hydrogen|direct FE H2;1
+SE|Electricity;SE|Input|Electricity|Hydrogen|Electricity Storage;1
+SE|Electricity;SE|Input|Electricity|Buildings;1
+SE|Electricity;SE|Input|Electricity|Industry;1
+SE|Electricity;SE|Input|Electricity|Transport;1
+SE|Electricity;SE|Input|Electricity|CDR;1
+SE|Electricity;SE|Input|Electricity|Self Consumption Energy System;1
+SE|Electricity;SE|Input|Electricity|PE Production;1
+;;
+# check balance of SE|Hydrogen hydrogen generation with the hydrogen demand variables by sector;;
+SE|Hydrogen;FE|Industry|+|Hydrogen;1
+SE|Hydrogen;FE|Buildings|+|Hydrogen;1
+SE|Hydrogen;FE|Transport|+|Hydrogen;1
+SE|Hydrogen;FE|CDR|+|Hydrogen;1
+SE|Hydrogen;SE|Input|Hydrogen|Electricity|+|Normal Turbines;1
+SE|Hydrogen;SE|Input|Hydrogen|Electricity|+|Forced VRE Turbines;1
+SE|Hydrogen;SE|Input|Hydrogen|Synthetic Fuels|+|Liquids;1
+SE|Hydrogen;SE|Input|Hydrogen|Synthetic Fuels|+|Gases;1
+SE|Hydrogen;SE|Input|Hydrogen|Other Energy System Consumption;1
+;;
+# check balance of carbon sources and carbon sinks for carbon management variables;;
+Carbon Management|Carbon Capture;Carbon Management|Storage;1
+Carbon Management|Carbon Capture;Carbon Management|Usage;1
+Carbon Management|Carbon Capture;Carbon Management|Venting of Captured Carbon;1
+;;
+# check consistency of DACCS reporting
+Carbon Sequestration|Direct Air Capture;Emi|CO2|CDR|DACCS;-1
+;;
+# check Energy Investments subcategories
+Energy Investments|Electricity|Fossil;Energy Investments|Electricity|Coal;1
+Energy Investments|Electricity|Fossil;Energy Investments|Electricity|Gas;1
+Energy Investments|Electricity|Fossil;Energy Investments|Electricity|Oil;1
+Energy Investments|Electricity;Energy Investments|Electricity|Fossil;1
+Energy Investments|Electricity;Energy Investments|Electricity|Non-Fossil;1
+Energy Investments|Electricity;Energy Investments|Electricity|+|Storage;1
+Energy Investments|Electricity;Energy Investments|Electricity|+|Grid;1
+Energy Investments|Electricity;Energy Investments|Electricity|+|Hydrogen;1
+Energy Investments|Electricity|Non-Bio Re;Energy Investments|Electricity|Hydro;1
+Energy Investments|Electricity|Non-Bio Re;Energy Investments|Electricity|Geothermal;1
+Energy Investments|Electricity|Non-Bio Re;Energy Investments|Electricity|Wind;1
+Energy Investments|Electricity|Non-Bio Re;Energy Investments|Electricity|Solar;1
+Energy Investments|Liquids|+|Fossil;Energy Investments|Liquids|Oil Ref;1
+Energy Investments|Liquids|+|Fossil;Energy Investments|Liquids|Fossil|w/o oil;1
+Energy Investments|Heat|Fossil;Energy Investments|Heat|+|Gas;1
+Energy Investments|Heat|Fossil;Energy Investments|Heat|+|Coal;1
+Energy Investments|Liquids including gas stations;Energy Investments|Liquids|Transport and Distribution including gas stations;1
+Energy Investments|Liquids including gas stations;Energy Investments|Liquids;1

@@ -264,5 +264,6 @@ remFilter <- remFilter[, , c("New Cap|Electricity|Hydro", "Cap|Electricity|Hydro
 
   jobs <- mbind(jobsCi, jobsOm, jobsProd, jobsManf)
 
+  getSets(jobs)[3] <- "variable"
   return(jobs)
 }

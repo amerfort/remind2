@@ -16,10 +16,10 @@
 
 #' @export
 get_total_efficiencies <- function(gdxName) { 
-  pm_cesdata <- read.gdx(gdxName, 'pm_cesdata', factors = FALSE, 
+  pm_cesdata <- read.gdx(gdxName, 'pm_cesdata',
                          colNames = c('t', 'regi', 'pf', 'param', 'value'))
   
-  pf_mapping <- read.gdx(gdxName, 'cesOut2cesIn', factors = FALSE, 
+  pf_mapping <- read.gdx(gdxName, 'cesOut2cesIn',
                          colNames = c('pf.out', 'pf.in'))
   
   full_join(

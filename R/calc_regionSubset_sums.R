@@ -9,7 +9,7 @@
 #' @return A [`MAgPIE`][magclass::magclass] object.
 #' @author Michaja Pehl
 #'
-#' @importFrom magclass mbind dimSums getItems<-
+#' @importFrom magclass mbind getItems<-
 #'
 #'
 #' @examples

@@ -1,0 +1,472 @@
+# Summary
+
+
+
+## GHG Emissions
+
+```{r GHG emissions}
+tot <- "Emi|GHG"
+items <- c(
+  "Emi|CO2|Energy",
+  "Emi|CO2|Industrial Processes",
+  "Emi|CO2|Land-Use Change",
+  "Emi|GHG|CH4",
+  "Emi|GHG|N2O",
+  "Emi|GHG|F-Gases",
+  "Emi|CO2|non-BECCS CDR")
+showAreaAndBarPlots(data, items, tot, scales = "fixed")
+```
+
+## GHG by sector
+
+```{r GHG by sector (w/ gross emissions, excl. negative emissions from CCS of non-fossil carbon)}
+tot <- "Emi|GHG"
+items <- c(
+  "Emi|GHG|Gross|Energy|Supply|Electricity",
+  "Emi|GHG|Gross|Energy|Supply|Non-electric",
+  "Emi|GHG|Energy|Demand|Transport",
+  "Emi|GHG|Energy|Demand|Buildings",
+  "Emi|GHG|Gross|Energy|Demand|Industry",
+  "Emi|GHG|Energy|Demand|CDR",
+  "Emi|GHG|Industrial Processes",
+  "Emi|GHG|Agriculture",
+  "Emi|GHG|Land-Use Change",
+  "Emi|GHG|Waste",
+  "Emi|CO2|CDR|BECCS",
+  "Emi|CO2|CDR|Industry CCS|Synthetic Fuels",
+  "Emi|CO2|CDR|DACCS",
+  "Emi|CO2|CDR|EW")
+showAreaAndBarPlots(data, items, tot, scales = "fixed")
+```
+
+### GHG pCap by sector
+
+```{r GHG pCap by sector}
+showAreaAndBarPlots(data, paste(items, "pCap"), paste(tot, "pCap"), scales = "fixed")
+```
+
+## CO2 by sector
+
+```{r CO2 by sector (w/ gross emissions, excl. negative emissions from CCS of non-fossil carbon)}
+tot <- "Emi|CO2"
+items <- c(
+  "Emi|CO2|Land-Use Change",
+  "Emi|CO2|Industrial Processes",
+  "Emi|CO2|Energy|Demand|Transport",
+  "Emi|CO2|Gross|Energy|Demand|Industry",
+  "Emi|CO2|Energy|Demand|Buildings",
+  "Emi|CO2|Energy|Demand|CDR",
+  "Emi|CO2|Gross|Energy|Supply|Non-electric",
+  "Emi|CO2|Gross|Energy|Supply|Electricity",
+  "Emi|CO2|CDR|BECCS",
+  "Emi|CO2|CDR|Industry CCS|Synthetic Fuels",
+  "Emi|CO2|CDR|DACCS",
+  "Emi|CO2|CDR|EW")
+showAreaAndBarPlots(data, items, tot, scales = "fixed")
+```
+
+###  CO2 pCap by sector
+
+```{r CO2 pCap by sector}
+showAreaAndBarPlots(data, paste(items, "pCap"), paste(tot, "pCap"), scales = "fixed")
+```
+
+
+###  CO2 cumulated by sector
+
+```{r CO2 cumulated by sector (w/ gross emissions, excl. negative emissions from CCS of non-fossil carbon)}
+tot <- "Emi|CO2|Cumulated"
+items <- c(
+  "Emi|CO2|Cumulated|Land-Use Change",
+  "Emi|CO2|Cumulated|Industrial Processes",
+  "Emi|CO2|Cumulated|Energy|Demand|Transport",
+  "Emi|CO2|Cumulated|Gross|Energy|Demand|Industry",
+  "Emi|CO2|Cumulated|Energy|Demand|Buildings",
+  "Emi|CO2|Cumulated|Energy|Demand|CDR",
+  "Emi|CO2|Cumulated|Gross|Energy|Supply|Non-electric",
+  "Emi|CO2|Cumulated|Gross|Energy|Supply|Electricity",
+  "Emi|CO2|Cumulated|CDR|BECCS",
+  "Emi|CO2|Cumulated|CDR|Industry CCS|Synthetic Fuels",
+  "Emi|CO2|Cumulated|CDR|DACCS",
+  "Emi|CO2|Cumulated|CDR|EW")
+showAreaAndBarPlots(data, items, tot, scales = "fixed")
+```
+
+
+## FE by sector
+
+```{r FE by sector}
+items <- c(
+  "FE|CDR",
+  "FE|Transport",
+  "FE|Buildings",
+  "FE|Industry")
+showAreaAndBarPlots(data, items, scales = "fixed")
+```
+
+## FE per capita (by sector, time domain, area plot)
+
+```{r FE per capita (by sector, time domain, area plot)}
+items <- c(
+  "FE|CDR pCap",
+  "FE|Transport pCap",
+  "FE|Buildings pCap",
+  "FE|Industry pCap")
+showAreaAndBarPlots(data, items, tot = "FE pCap", scales = "fixed")
+```
+
+## FE per capita (by sector, time domain, line graph)
+
+```{r FE per capita (by sector, time domain, line graph)}
+dIea <- data %>%
+  # To make the plots less crowded, show only IEA historical data.
+  filter(scenario != "historical" | model == "IEA")
+showMultiLinePlots(dIea, "FE pCap")
+items <- c(
+  "FE|Transport pCap",
+  "FE|Buildings pCap",
+  "FE|Industry pCap")
+showMultiLinePlots(dIea, items, scales = "fixed")
+```
+
+## FE per capita (by sector, GDP)
+
+```{r FE per capita (by sector, GDP)}
+dIea <- data %>%
+  # To make the plots less crowded, show only IEA historical data.
+  filter(scenario != "historical" | model == "IEA")
+showMultiLinePlotsByVariable(dIea, "FE pCap", "GDP|PPP pCap", showGlobal = TRUE)
+items <- c(
+  "FE|Transport pCap",
+  "FE|Buildings pCap",
+  "FE|Industry pCap")
+showMultiLinePlotsByVariable(dIea, items, "GDP|PPP pCap", scales = "fixed", showGlobal = TRUE)
+
+```
+
+## FE by carrier
+
+```{r FE by carrier}
+items <- c(
+  "FE|Electricity",
+  "FE|Hydrogen",
+  "FE|Heat",
+  "FE|Gases",
+  "FE|Liquids",
+  "FE|Solids",
+  NULL)
+
+showAreaAndBarPlots(data, items, orderVars = "user", scales = "fixed")
+```
+
+## FE by carrier (detailed)
+
+```{r FE by carrier (detailed)}
+items <- c(
+  "FE|Transport|Electricity",
+  "FE|Buildings|Electricity",
+  "FE|Industry|Electricity",
+  "FE|Transport|Hydrogen",
+  "FE|Buildings|Hydrogen",
+  "FE|Industry|Hydrogen",
+  "FE|Industry|Heat",
+  "FE|Buildings|Heat",
+  "FE|Transport|Gases",
+  "FE|Buildings|Gases",
+  "FE|Industry|Gases",
+  "FE|Transport|Liquids", 
+  "FE|Buildings|Liquids",
+  "FE|Industry|Liquids",
+  "FE|Buildings|Solids", 
+  "FE|Industry|Solids",
+  NULL)
+
+showAreaAndBarPlots(data, items, orderVars = "user", scales = "fixed")
+```
+
+## FE Industry by carrier (incl. non-energy use)
+
+```{r FE Industry by carrier (incl. non-energy use)}
+items <- c(
+  "FE|Industry|Electricity",
+  "FE|Industry|Hydrogen",
+  "FE|Industry|Heat",
+  "FE|Industry|Gases",
+  "FE|Industry|Liquids",
+  "FE|Industry|Solids",
+  NULL)
+
+showAreaAndBarPlots(data, items, orderVars = "user", scales = "fixed")
+```
+
+## FE Buildings by carrier
+
+```{r FE Buildings by carrier}
+items <- c(
+  "FE|Buildings|Electricity",
+  "FE|Buildings|Hydrogen",
+  "FE|Buildings|Heat",
+  "FE|Buildings|Gases",
+  "FE|Buildings|Liquids",
+  "FE|Buildings|Solids",
+  NULL)
+
+showAreaAndBarPlots(data, items, orderVars = "user", scales = "fixed")
+```
+
+## FE Transport by carrier
+
+```{r FE Transport by carrier}
+items <- c(
+  "FE|Transport|Electricity",
+  "FE|Transport|Hydrogen",
+  "FE|Transport|Gases",
+  "FE|Transport|Liquids",
+  NULL)
+
+showAreaAndBarPlots(data, items, orderVars = "user", scales = "fixed")
+```
+
+## FE CDR by carrier
+
+
+```{r FE CDR by carrier}
+items <- c(
+  "FE|CDR|Electricity",
+  "FE|CDR|Hydrogen",
+  "FE|CDR|Gases",
+  "FE|CDR|Liquids",
+  NULL)
+
+showAreaAndBarPlots(data, items, orderVars = "user", scales = "fixed")
+```
+
+
+## FE Non-energy Use by carrier
+
+```{r FE Non-energy Use by carrier}
+items <- c(
+  "FE|Non-energy Use|Industry|Solids",
+  "FE|Non-energy Use|Industry|Liquids",
+  "FE|Non-energy Use|Industry|Gases")
+showAreaAndBarPlots(data, items)
+```
+
+## SE Electricity by carrier
+
+```{r SE Electricity by carrier}
+
+tot <- "SE|Electricity"
+
+items <- c(
+  "SE|Electricity|Net Imports",
+  "SE|Electricity|Solar|CSP",
+  "SE|Electricity|Solar|PV",
+  "SE|Electricity|Wind|Onshore",
+  "SE|Electricity|Wind|Offshore",
+  "SE|Electricity|Hydro",  
+  "SE|Electricity|Hydrogen",
+  "SE|Electricity|Nuclear",  
+  "SE|Electricity|Geothermal",  
+  "SE|Electricity|Biomass|w/ CC",
+  "SE|Electricity|Biomass|w/o CC",
+  "SE|Electricity|Oil",  
+  "SE|Electricity|Gas|w/ CC",
+  "SE|Electricity|Gas|w/o CC",
+  "SE|Electricity|Coal|w/ CC",
+  "SE|Electricity|Coal|w/o CC",
+  NULL)
+
+showAreaAndBarPlots(data, items, orderVars = "user", tot, scales = "fixed")
+```
+
+
+
+## PE by carrier
+
+```{r PE by carrier}
+items <- c(
+  "PE|Solar",
+  "PE|Wind",
+  "PE|Hydro",  
+  "PE|Nuclear",  
+  "PE|Geothermal",
+  "PE|Biomass",  
+  "PE|Oil",
+  "PE|Gas",  
+  "PE|Coal",
+  NULL)
+
+showAreaAndBarPlots(data, items, orderVars = "user", scales = "fixed")
+```
+
+
+## CO2 Prices
+
+```{r CO2 Prices}
+showLinePlots(data, "Price|Carbon")
+showRegiLinePlots(data, "Price|Carbon")
+```
+
+```{r CO2 Prices per sector}
+items <- c(
+  "Price|Carbon|Demand|Transport",
+  "Price|Carbon|Demand|Buildings",
+  "Price|Carbon|Demand|Industry",
+  "Price|Carbon|Supply"
+)
+# older runs might not have the new sector tax variables
+if (all(items %in% data$variable)) {
+  avgTax <- data[data$variable == "Price|Carbon"                  & data$scenario != "historical", "value"]
+  buiTax <- data[data$variable == "Price|Carbon|Demand|Buildings" & data$scenario != "historical", "value"]
+  traTax <- data[data$variable == "Price|Carbon|Demand|Transport" & data$scenario != "historical", "value"]
+  indTax <- data[data$variable == "Price|Carbon|Demand|Industry"  & data$scenario != "historical", "value"]
+  supTax <- data[data$variable == "Price|Carbon|Supply"           & data$scenario != "historical", "value"]
+  # only create plots if a tax is unequal to the average co2 tax
+  if (!identical(buiTax, avgTax) ||
+      !identical(traTax, avgTax) ||
+      !identical(indTax, avgTax) ||
+      !identical(supTax, avgTax)
+      ) {
+    showLinePlots(data, "Price|Carbon|Demand|Buildings")
+    showLinePlots(data, "Price|Carbon|Demand|Transport")
+    showLinePlots(data, "Price|Carbon|Demand|Industry")
+    showLinePlots(data, "Price|Carbon|Supply")
+  }
+}
+```
+
+```{r CO2 Prices ETS/ESR}
+showLinePlots(data, "Price|Carbon|ETS")
+showLinePlots(data, "Price|Carbon|ESR")
+```
+
+
+## Policy Costs
+
+```{r Policy Costs Consumption}
+showLinePlots(data, "Policy Cost|Consumption Loss")
+```
+
+
+```{r Policy Costs Relative}
+showLinePlots(data, "Policy Cost|Consumption Loss|Relative to Reference Consumption")
+```
+
+
+```{r Policy Costs GDP}
+showLinePlots(data, "Policy Cost|GDP Loss")
+```
+
+## Tables of Significant Periods 
+
+Every statistic in the following tables, e.g., $\max$, $\min$, is taken over the REMIND model outputs only (no historical data).
+
+\newpage
+
+### Emi|CO2: Max, Min, and Net 0
+
+```{r Tables CO2 Max}
+data %>%
+  calcTimeSeriesStats(
+    "Emi|CO2",
+    stats = list("Max Period (Max Value)" = function(v, p) {
+      sprintf("%d (%5.2f)", p[which.max(v)], max(v) / 1000)
+    })
+  ) %>%
+  mutate(unit = "Gt CO2/yr") %>% # divided by 1000 and change unit form Mt to Gt
+  showStatsTable()
+```
+
+```{r Tables CO2 Min}
+data %>%
+  calcTimeSeriesStats(
+    "Emi|CO2",
+    stats = list("Min Period (Min Value)" = function(v, p) {
+      sprintf("%d (%5.2f)", p[which.min(v)], min(v) / 1000)
+    })
+  ) %>%
+  mutate(unit = "Gt CO2/yr") %>% # divided by 1000 and change unit form Mt to Gt
+  showStatsTable()
+```
+
+```{r Tables CO2 Net Zero}
+data %>%
+  calcTimeSeriesStats(
+    "Emi|CO2",
+    stats = list("Net 0 Period, i.e., first period with < 2\\% of 2005 value" = function(v, p) {
+      p[which(v <= v[p == 2005] * 0.02)[1]]
+    })
+  ) %>%
+  showStatsTable()
+```
+
+\newpage
+
+### Emi|GHG: Max, Min, and Net 0
+
+```{r Tables GHG Max}
+data %>%
+  calcTimeSeriesStats(
+    "Emi|GHG",
+    stats = list("Max Period (Max Value)" = function(v, p) {
+      sprintf("%d (%5.2f)", p[which.max(v)], max(v) / 1000)
+    })
+  ) %>%
+  mutate(unit = "Gt CO2eq/yr") %>% # divided by 1000 and change unit form Mt to Gt
+  showStatsTable()
+```
+
+```{r Tables GHG Min}
+data %>%
+  calcTimeSeriesStats(
+    "Emi|GHG",
+    stats = list("Min Period (Min Value)" = function(v, p) {
+      sprintf("%d (%5.2f)", p[which.min(v)], min(v) / 1000)
+    })
+  ) %>%
+  mutate(unit = "Gt CO2eq/yr") %>% # divided by 1000 and change unit form Mt to Gt
+  showStatsTable()
+```
+
+```{r Tables GHG Net Zero}
+data %>%
+  calcTimeSeriesStats(
+    "Emi|GHG",
+    stats = list("Net 0 Period, i.e., first period with < 2\\% of 2005 value" = function(v, p) {
+      p[which(v <= v[p == 2005] * 0.02)[1]]
+    })
+  ) %>%
+  showStatsTable()
+```
+
+\newpage
+
+
+### Temperature|Global Mean: Max
+
+```{r Temperature}
+data %>%
+  calcTimeSeriesStats(
+    "Temperature|Global Mean",
+    stats = list("Max Period (Max Value)" = function(v, p) {
+      sprintf("%d (%.2f)", p[which.max(v)], max(v))
+    })
+  ) %>%
+  showStatsTable()
+
+data %>%
+  calcTimeSeriesStats(
+    "Temperature|Global Mean",
+    stats = list("Period (End of century Value)" = function(v, p) {
+      sprintf("%d (%.2f)", 2100, v[p == 2100])
+    })
+  ) %>%
+  showStatsTable()
+
+
+
+```
+
+\newpage
+

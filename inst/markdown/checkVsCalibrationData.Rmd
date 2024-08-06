@@ -1,0 +1,200 @@
+---
+title: "Check against Calibration Data"
+date: "`r format(Sys.Date())`"
+output:
+  pdf_document:
+    toc: yes
+    number_sections: yes
+    keep_tex: false
+    toc_depth: 3
+geometry: "a4paper,landscape,left=0.5cm,right=0.5cm,top=0.5cm,bottom=0.5cm,footnotesep=0.0cm,footskip=0.1cm"
+params:
+  gdx: ''
+  figWidth: 15 
+  figHeight: 10
+  warning: no
+  message: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  error = TRUE,
+  message = params$message,
+  warning = params$warning,
+  fig.width = params$figWidth,
+  fig.height = params$figHeight
+)
+```
+
+
+
+```{r libraries, include=FALSE}
+# kableExtra must not be loaded before the call of library(kableExtra) below,
+# as its .onLoad() function must be called to tell knitr about add necessary
+# LaTeX libraries needed for tables.
+# If the following line is not included, successive calls to compareScenarios2()
+# may cause "Undefined control sequence" errors in LaTeX.
+try(unloadNamespace("kableExtra"), silent = TRUE)
+
+library(gridExtra) # nolint
+options(tidyverse.quiet = TRUE) # nolint
+library(tidyverse) # nolint
+library(kableExtra) # nolint
+library(quitte) # nolint
+library(gdx) # nolint
+library(ggplot2) # nolint
+library(dplyr) # nolint
+```
+
+
+```{r read, include=FALSE}
+scen <- readGDX(params$gdx, "c_expname")[[1]]
+
+vars <- setdiff(
+  c(
+    readGDX(params$gdx, "ppf", restore_zeros = FALSE),
+    readGDX(params$gdx, "industry_ue_calibration_target_dyn37", restore_zeros = FALSE)
+  ), "lab"
+)
+
+# baseline run quantities
+q.baseline <- readGDX(params$gdx, "vm_cesIO", restore_zeros = FALSE)[, , "l"] %>% dimReduce()
+
+# calibration data quantities
+q.calibration <- readGDX(params$gdx, "pm_cesdata", restore_zeros = FALSE)[, , "quantity"] %>% dimReduce()
+q.baseline <- q.baseline[, , c(vars, "inco")]
+q.calibration <- q.calibration[, , c(vars, "inco")]
+
+# baseline run prices
+
+p.baseline <- readGDX(params$gdx, "o01_CESderivatives", restore_zeros = FALSE)
+if (!is.null(p.baseline)) {
+  p.baseline <- p.baseline[, , "inco"] %>% dimReduce()
+  p.baseline <- p.baseline[, , vars]
+}
+
+# calibration data prices
+p.calibration <- readGDX(params$gdx, "pm_cesdata", restore_zeros = FALSE)[, , "price"] %>% dimReduce()
+p.calibration <- p.calibration[, , vars]
+```
+
+# Check vs CalibData
+
+This report compares how well a baseline run matches with the target data of the REMIND CES function calibration. The levels of production factors of the CES function are compared to the target values of the baseline scenario (Quantity Plots). The target values are taken from the input data to the calibration (the input files `f_fedemand.cs4r`, `f_gdp.cs3r`, `f_lab.cs3r`). If you compare a baseline run to the target values and observe significant differences, it is recommended to rerun a calibration run. You can also check out plots of the prices of each production factor in comparison to the prices reached in the respective calibration run.
+
+## Deviations of Quantities
+
+The following table lists all deviations greater 15 %.
+
+```{r quantity deviations}
+min.reldev <- 15
+min.absdev <- 1e-1
+
+# get deviations
+
+deviations <- left_join(
+  as.quitte(q.baseline) %>% select(region, variable = all_in, period, value) %>% mutate(model = "Baseline"),
+  as.quitte(q.calibration) %>% select(region, variable = all_in, period, value) %>% mutate(model = "Calibration"),
+  by = c("region", "period", "variable"), suffix = c(".baseline", ".calibration")
+) %>%
+  filter(!is.na(value.baseline), !is.na(value.calibration)) %>%
+  mutate(
+    abs.deviation = abs(value.calibration - value.baseline),
+    rel.deviation = abs.deviation / value.calibration * 100
+  ) %>%
+  filter(rel.deviation > min.reldev, abs.deviation > min.absdev) %>%
+  select(region, variable, period)
+
+deviations <- aggregate(period ~ region + variable, data = deviations, paste, collapse = ",") %>%
+  arrange(region)
+
+kable(as.data.frame(deviations), longtable = TRUE) %>%
+  kable_styling(latex_options = c("hold_position", "repeat_header"))
+```
+
+## Plots
+
+```{r plots, echo = FALSE, results='asis'}
+if (!is.null(p.baseline)) {
+  regions <- union(
+    union(getItems(p.baseline, dim = 1), getItems(q.baseline, dim = 1)),
+    union(getItems(p.calibration, dim = 1), getItems(q.calibration, dim = 1))
+  )
+  years <- intersect(getItems(p.baseline, dim = 2), getItems(q.baseline, dim = 2))
+} else {
+  regions <- union(getItems(q.baseline, dim = 1), getItems(q.calibration, dim = 1))
+  years <- getItems(q.baseline, dim = 2)
+}
+
+for (r in regions) {
+  # quantity plot
+
+  cat(paste0("### ", r))
+  cat("\n\n\\pagebreak\n")
+
+  data <- rbind(
+    as.quitte(q.baseline[r, years, ]) %>%
+      select(region, variable = all_in, period, value) %>%
+      mutate(model = scen),
+    as.quitte(q.calibration[r, years, ]) %>%
+      select(region, variable = all_in, period, value) %>%
+      mutate(model = "Calib. Target")
+  )
+  p <- ggplot() +
+    geom_line(
+      data = data,
+      aes(x = period, y = value, color = model), size = 1
+    ) +
+    facet_wrap("variable", scales = "free_y", ncol = 6) +
+    theme(
+      strip.text.y = element_blank(),
+      axis.title.x = element_blank(),
+      axis.title.y = element_blank(),
+      legend.title = element_blank(),
+      legend.position = "right",
+      legend.direction = "vertical"
+    ) +
+    ggtitle(paste0("quantities ", r)) +
+    scale_color_brewer(palette = "Set1") +
+    expand_limits(y = 0)
+
+
+  print(p)
+
+  cat("\n\n\\pagebreak\n")
+
+  # price plot
+
+  if (!is.null(p.baseline)) {
+    data <- rbind(
+      as.quitte(p.baseline[r, years, ]) %>%
+        select(region, variable = all_in1, period, value) %>%
+        mutate(model = scen),
+      as.quitte(p.calibration[r, years, ]) %>%
+        select(region, variable = all_in, period, value) %>%
+        mutate(model = "Calib. Target")
+    )
+    p <- ggplot() +
+      geom_line(
+        data = data,
+        aes(x = period, y = value, color = model), size = 1
+      ) +
+      facet_wrap("variable", scales = "free_y", ncol = 6) +
+      theme(
+        strip.text.y = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        legend.title = element_blank(),
+        legend.position = "right",
+        legend.direction = "vertical"
+      ) +
+      ggtitle(paste0("prices ", r)) +
+      scale_color_brewer(palette = "Set1") +
+      expand_limits(y = 0)
+
+    print(p)
+    cat("\n\n\\pagebreak\n")
+  }
+}
+```

@@ -13,7 +13,7 @@
 #' 
 #' @export
 #' @importFrom gdx readGDX
-#' @importFrom magclass mbind dimSums getNames<-
+#' @importFrom magclass mbind getNames<-
 
 readConsumption <- function(gdx, field="l"){
   tmp <- readGDX(gdx, name='vm_cons', field=field, format="first_found")

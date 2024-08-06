@@ -31,5 +31,5 @@ convGDX2MIF.R for the reporting
 
 }
 \author{
-Renato Rodrigues, Christoph Bertram, Antoine Levesque
+Renato Rodrigues, Felix Schreyer
 }

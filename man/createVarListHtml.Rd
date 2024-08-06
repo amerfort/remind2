@@ -43,7 +43,7 @@ detailsAR6 <-
   readr::read_delim(
     paste0(
       "https://raw.githubusercontent.com/pik-piam/",
-      "project_interfaces/master/ar6/mapping_template_AR6.csv"),
+      "piamInterfaces/master/inst/mappings/mapping_AR6.csv"),
     delim = ";",
     col_select = c(r21m42, Definition)
   ) \%>\%

@@ -2,7 +2,7 @@
 % Please edit documentation in R/reportEmiAirPol.R
 \name{reportEmiAirPol}
 \alias{reportEmiAirPol}
-\title{Read in GDX and calculate air pollution emissions, used in convGDX2MIF.R for 
+\title{Read in GDX and calculate air pollution emissions, used in convGDX2MIF.R for
 the reporting}
 \usage{
 reportEmiAirPol(
@@ -25,7 +25,7 @@ t=c(seq(2005,2060,5),seq(2070,2110,10),2130,2150)}
 MAgPIE object - contains the emission variables
 }
 \description{
-Read in air pollution emission information from GDX file, information used in 
+Read in air pollution emission information from GDX file, information used in
 convGDX2MIF.R for the reporting
 }
 \examples{
