@@ -1,6 +1,6 @@
 # The REMIND R package (2nd generation)
 
-R package **remind2**, version **1.175.1**
+R package **remind2**, version **1.175.2**
 
 [![CRAN status](https://www.r-pkg.org/badges/version/remind2)](https://cran.r-project.org/package=remind2) [![R build status](https://github.com/pik-piam/remind2/workflows/check/badge.svg)](https://github.com/pik-piam/remind2/actions) [![codecov](https://codecov.io/gh/pik-piam/remind2/branch/master/graph/badge.svg)](https://app.codecov.io/gh/pik-piam/remind2) [![r-universe](https://pik-piam.r-universe.dev/badges/remind2)](https://pik-piam.r-universe.dev/builds)
 
@@ -49,7 +49,7 @@ In case of questions / problems please contact Renato Rodrigues <renato.rodrigue
 
 To cite package **remind2** in publications use:
 
-Rodrigues R, Baumstark L, Benke F, Dietrich J, Dirnaichner A, Dorndorf T, Duerrwaechter J, Führlich P, Giannousakis A, Hasse R, Hilaire J, Klein D, Koch J, Kowalczyk K, Levesque A, Malik A, Merfort A, Merfort L, Morena-Leiva S, Pehl M, Pietzcker R, Rauner S, Richters O, Rottoli M, Schötz C, Schreyer F, Siala K, Sörgel B, Spahr M, Strefler J, Verpoort P, Weigmann P, Rüter T (2025). "remind2: The REMIND R package (2nd generation)." Version: 1.175.1, <https://github.com/pik-piam/remind2>.
+Rodrigues R, Baumstark L, Benke F, Dietrich J, Dirnaichner A, Dorndorf T, Duerrwaechter J, Führlich P, Giannousakis A, Hasse R, Hilaire J, Klein D, Koch J, Kowalczyk K, Levesque A, Malik A, Merfort A, Merfort L, Morena-Leiva S, Pehl M, Pietzcker R, Rauner S, Richters O, Rottoli M, Schötz C, Schreyer F, Siala K, Sörgel B, Spahr M, Strefler J, Verpoort P, Weigmann P, Rüter T (2025). "remind2: The REMIND R package (2nd generation)." Version: 1.175.2, <https://github.com/pik-piam/remind2>.
 
 A BibTeX entry for LaTeX users is
 
@@ -60,6 +60,6 @@ A BibTeX entry for LaTeX users is
   date = {2025-04-10},
   year = {2025},
   url = {https://github.com/pik-piam/remind2},
-  note = {Version: 1.175.1},
+  note = {Version: 1.175.2},
 }
 ```
