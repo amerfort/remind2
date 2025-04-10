@@ -162,7 +162,8 @@ This might take some time (up to 1min). After this, an R-object `data` should be
 7. Open the section-Rmd-file in which you want to add the plot. The files are in the folder `inst/compareScenarios/` and have names of the form `cs_NN_XXXX.Rmd`, where `NN` is a two digit number and `XXXX` resembles the section title.
 8. You should be able to execute any chunk in the section Rmd by clicking the play button in its top right corner.
 9. Insert a new chunk by copying an old one or by pressing `CTRL+ALT+I`. Note: It is better to not assign names to the chunks as cs2 will crash if you used the same name twice.
-10. Add a new plot inside the chunk, e.g., `showLinePlots(data, "Your|Variable|Name")`. See [Plot Functions] below.
+10. Add a new plot inside the chunk, e.g., `showLinePlots(data, "Your|Variable|Name")`. See [Plot Functions] below. Note:
+Colors are handled by the [mip](https://github.com/pik-piam/mip) library. If variable names have identical prefixes or suffixes, these are abbreviated during matching, and only the abbreviated form is used for lookup in the [plotstyles](https://github.com/pik-piam/mip/blob/master/inst/extdata/plotstyle.csv) file.   
 11. Run your newly created chunk to see the plot.
 12. Run the following code to see your new plot in a PDF. If you used `loadModeltest()` in 6., mif-files should be available in `some/folder/`.
 
