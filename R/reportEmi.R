@@ -1454,30 +1454,20 @@ reportEmi <- function(gdx, output = NULL, regionSubsetList = NULL,
 
   # add subcategories of co2luc only if they already exist in the gdx
   if (!is.null(p_co2lucSub)) {
-    out <- mbind(
-      out,
-      setNames(dimSums(p_co2lucSub[, , "co2lucNegIntentAR"], dim = 3) * GtC_2_MtCO2, "Emi|CO2|Land-Use Change|Negative|Intentional|+|Reforestation (Mt CO2/yr)"),
-      setNames(dimSums(p_co2lucSub[, , "co2lucNegIntentAgroforestry"], dim = 3) * GtC_2_MtCO2, "Emi|CO2|Land-Use Change|Negative|Intentional|+|Agroforestry (Mt CO2/yr)"),
-      setNames(dimSums(p_co2lucSub[, , "co2lucNegIntentTimber"], dim = 3) * GtC_2_MtCO2, "Emi|CO2|Land-Use Change|Negative|Intentional|+|Timber (Mt CO2/yr)"),
-      setNames(dimSums(p_co2lucSub[, , "co2lucNegIntentSCM"], dim = 3) * GtC_2_MtCO2, "Emi|CO2|Land-Use Change|Negative|Intentional|+|Soil Carbon Management (Mt CO2/yr)"),
-      setNames(dimSums(p_co2lucSub[, , "co2lucNegIntentPeat"], dim = 3) * GtC_2_MtCO2, "Emi|CO2|Land-Use Change|Negative|Intentional|+|Peatland (Mt CO2/yr)"),
-      setNames(dimSums(p_co2lucSub[, , "co2lucNegUnintent"], dim = 3) * GtC_2_MtCO2, "Emi|CO2|Land-Use Change|Negative|+|Unintentional (Mt CO2/yr)"),
-      setNames(dimSums(p_co2lucSub[, , "co2lucPos"], dim = 3) * GtC_2_MtCO2, "Emi|CO2|Land-Use Change|+|Positive (Mt CO2/yr)")
-    )
-
-    # aggregates of co2luc subcategories
+    # Distinction for land management fluxes that are not CO2 induced: positive emissions from degradation, deforestation and wood harvest and CO2 uptake from regrowth
+    luc_landmanagement <-
+      dimSums(p_co2lucSub[, , "co2lucPos"], dim = 3) * GtC_2_MtCO2 +
+      dimSums(p_co2lucSub[, , "co2lucNegUnintent"], dim = 3) * GtC_2_MtCO2
+    # aggregate all CO2 price induced removal activities
     intentional <- c("co2lucNegIntentAR", "co2lucNegIntentAgroforestry", "co2lucNegIntentTimber", "co2lucNegIntentSCM", "co2lucNegIntentPeat")
+    
     out <- mbind(
       out,
-      setNames(dimSums(p_co2lucSub[, , intentional], dim = 3) * GtC_2_MtCO2, "Emi|CO2|Land-Use Change|Negative|+|Intentional (Mt CO2/yr)")
-    )
-
-    out <- mbind(
-      out,
-      setNames(out[, , "Emi|CO2|Land-Use Change|Negative|+|Intentional (Mt CO2/yr)"] +
-        out[, , "Emi|CO2|Land-Use Change|Negative|+|Unintentional (Mt CO2/yr)"], "Emi|CO2|Land-Use Change|+|Negative (Mt CO2/yr)"),
-      setNames(out[, , "Emi|CO2|Land-Use Change|+|Positive (Mt CO2/yr)"] +
-        out[, , "Emi|CO2|Land-Use Change|Negative|+|Unintentional (Mt CO2/yr)"], "Emi|CO2|Gross|+|Land-Use Change (Mt CO2/yr)")
+      setNames(luc_landmanagement, "Emi|CO2|Land-Use Change|+|Land Management (Mt CO2/yr)"),
+      setNames(dimSums(p_co2lucSub[, , "co2lucPos"], dim = 3) * GtC_2_MtCO2, "Emi|CO2|Land-Use Change|Land Management|+|Deforestation, Degradation and Wood Harvest (Mt CO2/yr)"),
+      setNames(dimSums(p_co2lucSub[, , "co2lucNegUnintent"], dim = 3) * GtC_2_MtCO2, "Emi|CO2|Land-Use Change|Land Management|+|Regrowth (Mt CO2/yr)"),
+      setNames(dimSums(p_co2lucSub[, , intentional], dim = 3) * GtC_2_MtCO2, "Emi|CO2|Land-Use Change|+|Conventional CDR on Land (Mt CO2/yr)"),
+      setNames(pmax(luc_landmanagement, 0),"Emi|CO2|Gross|+|Land-Use Change (Mt CO2/yr)")      
     )
   }
 
@@ -2355,10 +2345,6 @@ reportEmi <- function(gdx, output = NULL, regionSubsetList = NULL,
   # Defined as non-fossil permanent sequestration of carbon in land / geological storage / oceans.
   # CDR variables are by definition negative.
 
-  # assign land-use change emissions to CDR variable if they are negative
-  EmiCDR.LUC <- dimSums(vm_emiMacSector[, , "co2luc"], dim = 3) * GtC_2_MtCO2
-  EmiCDR.LUC[EmiCDR.LUC > 0] <- 0
-
   # calculate share of atmospheric and biogenic carbon contained in plastic products
   p_share_atmosco2_plastics <- dimSums(
     (out[, , "Carbon Management|Materials|Plastics|+|Biomass (Mt CO2/yr)"] +
@@ -2377,14 +2363,46 @@ reportEmi <- function(gdx, output = NULL, regionSubsetList = NULL,
   if (!is.null(dimSums(mselect(EmiPe2Se, all_enty1 = "sebiochar"), dim = 3))) {
     emi_Biochar <- dimSums(mselect(EmiPe2Se, all_enty1 = "sebiochar"), dim = 3)
   }
-
+  
+  # 1. Land CDR (MAgPIE)
+  # add subcategories of co2luc only if they already exist in the gdx
+  if (!is.null(p_co2lucSub)) {
+    # Forest management comes with two fluxes: Harvest or forest degradation (positive) and Regrowth (negative)
+    # as they are not independent, only of the net effect is negative, this counts as CDR (more regrowth than degradation and harvest)
+    
+    out <- mbind(
+      out,
+      setNames(dimSums(p_co2lucSub[, , "co2lucNegIntentAR"], dim = 3) * GtC_2_MtCO2, "Emi|CO2|CDR|Land-Use Change|+|AR (Mt CO2/yr)"),
+      setNames(dimSums(p_co2lucSub[, , "co2lucNegIntentAgroforestry"], dim = 3) * GtC_2_MtCO2, "Emi|CO2|CDR|Land-Use Change|+|Agroforestry (Mt CO2/yr)"),
+      setNames(dimSums(p_co2lucSub[, , "co2lucNegIntentTimber"], dim = 3) * GtC_2_MtCO2, "Emi|CO2|CDR|Land-Use Change|+|Harvested Wood Products (Timber) (Mt CO2/yr)"),
+      setNames(dimSums(p_co2lucSub[, , "co2lucNegIntentSCM"], dim = 3) * GtC_2_MtCO2, "Emi|CO2|CDR|Land-Use Change|+|Soil Carbon Management (Mt CO2/yr)"),
+      setNames(dimSums(p_co2lucSub[, , "co2lucNegIntentPeat"], dim = 3) * GtC_2_MtCO2, "Emi|CO2|CDR|Land-Use Change|+|Peatland (Mt CO2/yr)"),
+      setNames(pmin(luc_landmanagement, 0),"Emi|CO2|CDR|Land-Use Change|+|Forest Management (Mt CO2/yr)")
+    ) 
+    out <- mbind(
+      out,
+      # total CDR from land-use change emissions
+      setNames(
+        out[, , "Emi|CO2|Land-Use Change|+|Conventional CDR on Land (Mt CO2/yr)"] +
+        out[, , "Emi|CO2|CDR|Land-Use Change|+|Forest Management (Mt CO2/yr)"]),
+        "Emi|CO2|CDR|+|Land-Use Change (Mt CO2/yr)"
+      )
+  } else {
+    # assign land-use change emissions to CDR variable if they are negative
+    EmiCDR.LUC <- dimSums(vm_emiMacSector[, , "co2luc"], dim = 3) * GtC_2_MtCO2
+    EmiCDR.LUC[EmiCDR.LUC > 0] <- 0
+    out <- mbind(
+      out,
+      # total negative land-use change emissions
+      setNames(
+        EmiCDR.LUC,
+        "Emi|CO2|CDR|+|Land-Use Change (Mt CO2/yr)"
+      )
+    )
+  }
+    
+  # 2. Energy system CDR (REMIND)
   out <- mbind(
-    out,
-    # total negative land-use change emissions
-    setNames(
-      out[, , "Emi|CO2|Land-Use Change|Negative|+|Intentional (Mt CO2/yr)"],
-      "Emi|CO2|CDR|+|Land-Use Change (Mt CO2/yr)"
-    ),
     # total BECCS (pe2se + bio FE w CCS in industry and CDR demand sector + waste incineration BECCS)
     setNames(
       -out[, , "Carbon Management|Carbon Capture|Biomass (Mt CO2/yr)"]
