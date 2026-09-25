@@ -2384,9 +2384,9 @@ reportEmi <- function(gdx, output = NULL, regionSubsetList = NULL,
       # total CDR from land-use change emissions
       setNames(
         out[, , "Emi|CO2|Land-Use Change|+|Conventional CDR on Land (Mt CO2/yr)"] +
-        out[, , "Emi|CO2|CDR|Land-Use Change|+|Forest Management (Mt CO2/yr)"]),
+        out[, , "Emi|CO2|CDR|Land-Use Change|+|Forest Management (Mt CO2/yr)"],
         "Emi|CO2|CDR|+|Land-Use Change (Mt CO2/yr)"
-      )
+      ))
   } else {
     # assign land-use change emissions to CDR variable if they are negative
     EmiCDR.LUC <- dimSums(vm_emiMacSector[, , "co2luc"], dim = 3) * GtC_2_MtCO2
@@ -2403,6 +2403,7 @@ reportEmi <- function(gdx, output = NULL, regionSubsetList = NULL,
     
   # 2. Energy system CDR (REMIND)
   out <- mbind(
+    out,
     # total BECCS (pe2se + bio FE w CCS in industry and CDR demand sector + waste incineration BECCS)
     setNames(
       -out[, , "Carbon Management|Carbon Capture|Biomass (Mt CO2/yr)"]
